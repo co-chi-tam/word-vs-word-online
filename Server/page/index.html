@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>Word fight</title>
+   </head>
+   
+   <script src = "/socket.io/socket.io.js"></script>
+   <script>
+      var socket = io();
+      var turnIndex = -1;
+      var prefixWord = '';
+      function setUsername() {
+         socket.emit('setPlayerName', 
+         { 'playerAvatar': 0, 'playerName': document.getElementById('name').value });
+      };
+      var user;
+      socket.on('playerExists', function(data) {
+         document.getElementById('error-container').innerHTML = data;
+      });
+      socket.on('userSet', function(data) {
+         user = data.username;
+         document.body.innerHTML = '<input type = "text" id = "message">\
+         <button type = "button" name = "button" onclick = "sendMessage()">Send</button>';
+      });
+      function sendMessage() {
+         var msg = document.getElementById('message').value;
+         if(msg) {
+            socket.emit('sendRoomChat', {message: msg, user: user});
+            document.getElementById('message').value = '';
+         }
+      }
+      socket.on('msgChatRoom', function(data) {
+         if (user) {
+            document.getElementById('message-container').innerHTML += '<div><b>' + 
+               data.user + '</b>: ' + data.message + '</div>'
+         }
+         console.log ('MESSAGE RECEIVE ' + JSON.stringify(data));
+      })
+      socket.on('turnIndexSet', function(data) {
+         console.log ('TURN INDEX RECEIVE ' + JSON.stringify(data));
+         turnIndex = data.turnIndex;
+      })
+      function getRoomsStatus() {
+            socket.emit('getRoomsStatus');
+      }
+      function JoinOrCreateRoom() {
+            socket.emit('joinOrCreateRoom', { roomName: 'Room-1' });
+      }
+      function LeaveRoom() {
+            socket.emit('leaveRoom');
+      }
+      function SendWord()
+      {
+            socket.emit('sendWord', { turnIndex: turnIndex, word: document.getElementById('word').value });
+      }
+	  function RequestSuggestWord()
+	  {
+			socket.emit('suggestWord', { prefix: prefix });
+	  }
+      socket.on('playerNameSet', function(data) {
+            console.log (JSON.stringify(data));
+      });
+      socket.on('updateRoomStatus', function(data) {
+            console.log (JSON.stringify(data));
+      });
+	  socket.on ('joinRoomFailed', function(data) {
+            console.log ('joinRoomFailed ' + JSON.stringify(data));
+      });
+      socket.on('newJoinRoom', function(data) {
+            console.log (JSON.stringify(data));
+      });
+      socket.on('clearRoom', function(data) {
+            console.log ("Room is clear ... ");
+      });
+	socket.on('leaveRoom', function(data) {
+            console.log ("Leaved Room ... ");
+      });
+	socket.on('newLeaveRoom', function(data) {
+           console.log ('newLeaveRoom ' + JSON.stringify(data));
+      });
+      socket.on('beep', function(data) {
+            console.log ("beep");
+      });
+      socket.on('startGame', function(data) {
+            console.log ('startGame ' + JSON.stringify(data));
+			prefix = data.firstCharacter;
+      });
+      socket.on ('allRoomGetWord', function(data) {
+            console.log ('allRoomGetWord ' + JSON.stringify(data));
+			prefix = data.nextCharacter;
+      });
+	  socket.on ('receiveSuggestWord', function(data) {
+            console.log ('receiveSuggestWord ' + JSON.stringify(data));
+			document.getElementById('word').value = data.wordSuggest;
+      });
+	  socket.on ('endGameResult', function(data) {
+            console.log ('endGameResult ' + JSON.stringify(data));
+      });
+	  // socket.on ('countDownTimer', function(data) {
+            // console.log ('countDownTimer ' + JSON.stringify(data));
+      // });
+      socket.on ('msgError', function(data) {
+            console.log ('msgError ' + JSON.stringify(data));
+      });
+      setInterval(function(){
+            socket.emit("beep");
+      }, 1000);
+   </script>
+   
+   <body>
+      <div id = "error-container"></div>
+      <input id = "name" type = "text" name = "name" value = "" 
+         placeholder = "Enter your name!">
+      <button type = "button" name = "button" onclick = "setUsername()">
+         Let me chat!
+      </button>
+      <button type = "button" name = "button" onclick = "getRoomsStatus()">
+            Get room list
+      </button>
+      <button type = "button" name = "button" onclick = "JoinOrCreateRoom()">
+            Join or Create room
+      </button>
+      <button type = "button" name = "button" onclick = "LeaveRoom()">
+            Leave room
+      </button>
+      <br />
+      <input id = "word" type = "text" name = "word" value = "" 
+         placeholder = "Enter word!">
+      <button type = "button" name = "button" onclick = "SendWord()">
+            SEND WORD
+      </button>
+	   <button type = "button" name = "button" onclick = "RequestSuggestWord()">
+            SUGGEST WORD
+      </button>
+   </body>
+</html>

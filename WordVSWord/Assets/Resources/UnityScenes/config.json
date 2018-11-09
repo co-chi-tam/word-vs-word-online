@@ -1,0 +1,14 @@
+{
+    "scenes":
+    [
+        {"@type":"CLoadingScenePanel","isStartFirst": true,"sceneObjectName":"LoadingPanel","sceneObjectModel":"LoadingPanel"},
+        {"@type":"CSetingUserScenePanel","isStartFirst": false,"sceneObjectName":"SetingUserPanel","sceneObjectModel":"SetingUserPanel"},
+        {"@type":"CRoomDisplayScenePanel","isStartFirst": false,"sceneObjectName":"RoomDisplayPanel","sceneObjectModel":"RoomDisplayPanel"},
+        {"@type":"CMainGameScenePanel","isStartFirst": false,"sceneObjectName":"MainGamePanel","sceneObjectModel":"MainGamePanel"}
+    ],
+    "popups":
+    [
+        {"@type":"CConfirmPopup","sceneObjectName":"ConfirmPopup","sceneObjectModel":"ConfirmPopup"},
+        {"@type":"CLobbyPopup","sceneObjectName":"LobbyPopup","sceneObjectModel":"LobbyPopup"}
+    ]
+}
