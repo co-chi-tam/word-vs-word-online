@@ -106,6 +106,7 @@ public class CLobbyPopup : CDefaultPopup {
 			{
 				quitSubmit();
 			}
+			CSoundManager.Instance.Play ("sfx_click");
 		});
 	} 
 

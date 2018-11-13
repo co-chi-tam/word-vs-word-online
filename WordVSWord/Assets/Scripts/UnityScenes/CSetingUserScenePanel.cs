@@ -6,12 +6,18 @@ using UnityEngine.Events;
 
 public class CSetingUserScenePanel : CDefaultScene {
 
+	#region Fields
+
 	protected InputField m_PlayerNameInputField;
 	protected Button m_SubmitButton;
 	protected GameObject m_AvatarGrid;
 	protected Toggle[] m_AvatarButtons;
 
 	protected bool m_SettingComplete = false;
+
+	#endregion
+	
+	#region Constructor
 
 	public CSetingUserScenePanel() : base()
 	{
@@ -23,6 +29,10 @@ public class CSetingUserScenePanel : CDefaultScene {
 		
 	}
 
+	#endregion
+
+	#region Implementation Default
+
 	public override void OnInitObject()
 	{
 		base.OnInitObject();
@@ -31,14 +41,21 @@ public class CSetingUserScenePanel : CDefaultScene {
 		this.m_SubmitButton = CRootManager.FindObjectWith(GameObject, "SubmitButton").GetComponent<Button>();
 		this.m_AvatarGrid = CRootManager.FindObjectWith(GameObject, "AvatarGrid");
 		this.m_AvatarButtons = this.m_AvatarGrid.GetComponentsInChildren<Toggle>();
+		for (int i = 0; i < this.m_AvatarButtons.Length; i++)
+		{
+			// AVATAR
+			this.m_AvatarButtons[i].onValueChanged.RemoveAllListeners();
+			this.m_AvatarButtons[i].onValueChanged.AddListener ((value) => {
+				CSoundManager.Instance.Play ("sfx_click");
+			});
+		}
 		// SETTING
 		this.m_SettingComplete = false;
 		// EVENTS
-		// CSocketManager.Instance.Off("playerNameSet", this.ReceivePlayerName);
-		// CSocketManager.Instance.Off("msgError", this.ReceiveMessageError);
-		// EVENTS
 		CSocketManager.Instance.On("playerNameSet", this.ReceivePlayerName);
 		CSocketManager.Instance.On("msgError", this.ReceiveMessageError);
+		// EVENTS
+		this.m_SubmitButton.onClick.AddListener(this.OnSubmitClick);
 	}
 
 	public override void OnStartObject()
@@ -47,7 +64,6 @@ public class CSetingUserScenePanel : CDefaultScene {
 		// PLAYER NAME
 		this.m_PlayerNameInputField.text = CGameSetting.USER_NAME;
 		this.m_SubmitButton.interactable = true;
-		this.m_SubmitButton.onClick.AddListener(this.OnSubmitClick);
 		// PLAYER AVATAR
 		this.m_AvatarButtons[CGameSetting.USER_AVATAR].isOn = true;
 		// SETTING
@@ -57,34 +73,40 @@ public class CSetingUserScenePanel : CDefaultScene {
 	public override void OnDestroyObject()
 	{
 		base.OnDestroyObject();
-		// UI
-		this.m_SubmitButton.onClick.RemoveAllListeners();
 	}
+
+	public override void OnEscapeObject()
+	{
+		// base.OnEscapeObject();
+	}
+
+	#endregion
+
+	#region Private
 
 	private void OnSubmitClick()
 	{
+		CSoundManager.Instance.Play ("sfx_click");
 		// USER NAME
-		if (string.IsNullOrEmpty(this.m_PlayerNameInputField.text) == false)
+		if (string.IsNullOrEmpty(this.m_PlayerNameInputField.text))
+			return;
+		// SAVE
+		CGameSetting.USER_NAME = this.m_PlayerNameInputField.text;
+		// UI
+		this.m_SubmitButton.interactable = false;
+		// AVATAR
+		var avatarIndex = 0;
+		for (int i = 0; i < this.m_AvatarButtons.Length; i++)
 		{
-			// SAVE
-			CGameSetting.USER_NAME = this.m_PlayerNameInputField.text;
-			// UI
-			this.m_SubmitButton.interactable = false;
-			// AVATAR
-			var avatarIndex = 0;
-			for (int i = 0; i < this.m_AvatarButtons.Length; i++)
+			if (this.m_AvatarButtons[i].isOn)
 			{
-				if (this.m_AvatarButtons[i].isOn)
-				{
-					avatarIndex = i;
-					break;
-				}
+				avatarIndex = i;
+				break;
 			}
-			CGameSetting.USER_AVATAR = avatarIndex;
-			// SET PLAYER NAME
-			this.SetPlayerInfo(this.m_PlayerNameInputField.text, avatarIndex);
-			// CRootManager.Instance.ShowScene("RoomDisplayPanel");
 		}
+		CGameSetting.USER_AVATAR = avatarIndex;
+		// SET PLAYER NAME
+		this.SetPlayerInfo(this.m_PlayerNameInputField.text, avatarIndex);
 	}
 
 	private void SetPlayerInfo(string playerName, int avatarIndex) 
@@ -95,7 +117,6 @@ public class CSetingUserScenePanel : CDefaultScene {
 		userData.AddField("playerName", playerName);
 		// EMIT
 		CSocketManager.Instance.Emit("setPlayerName", userData);
-		Debug.Log ("setPlayerName " + playerName + " avatar " + avatarIndex);
 	}
 
 	private void ReceivePlayerName (SocketIO.SocketIOEvent ev) 
@@ -108,15 +129,22 @@ public class CSetingUserScenePanel : CDefaultScene {
 
 	private void ReceiveMessageError(SocketIO.SocketIOEvent ev)
 	{
-		Debug.Log (ev.ToString());
+		if (this.GameObject.activeInHierarchy == false)	
+			return;
 		// UI
 		this.m_SubmitButton.interactable = true;
 		CSocketManager.Instance.Invoke("ShowLastErrorPopup", 0f);
 	}
 
+	#endregion
+
+	#region Public
+
 	public virtual bool IsSettingComplete()
 	{
 		return this.m_SettingComplete;
 	}
+
+	#endregion
 
 }

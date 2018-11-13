@@ -5,7 +5,13 @@ using UnityEngine.UI;
 
 public class CLoadingScenePanel : CDefaultScene {
 
+	#region Fields
+
 	protected WaitForSeconds m_ShortTime = new WaitForSeconds(1f);
+
+	#endregion
+
+	#region Constructor
 
 	public CLoadingScenePanel() : base()
 	{
@@ -16,6 +22,10 @@ public class CLoadingScenePanel : CDefaultScene {
 	{
 		
 	}
+
+	#endregion
+
+	#region Implementation Default
 
 	public override void OnInitObject()
 	{
@@ -40,6 +50,15 @@ public class CLoadingScenePanel : CDefaultScene {
 		CSocketManager.Instance.OnConnect -= this.OnConnectSocket;
 	}
 
+	public override void OnEscapeObject()
+	{
+		// base.OnEscapeObject();
+	}
+	
+	#endregion
+
+	#region Private
+
 	protected IEnumerator HandleMoveNextScene()
 	{
 		yield return this.m_ShortTime;
@@ -51,5 +70,7 @@ public class CLoadingScenePanel : CDefaultScene {
 		CRootManager.Instance.StopCoroutine(this.HandleMoveNextScene());
 		CRootManager.Instance.StartCoroutine(this.HandleMoveNextScene());
 	}
+	
+	#endregion
 
 }

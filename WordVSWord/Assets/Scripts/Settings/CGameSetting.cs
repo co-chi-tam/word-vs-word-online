@@ -16,6 +16,20 @@ public class CGameSetting {
 		return Resources.Load<Sprite>(avatarName);
 	}
 
+	public static float CHAT_DELAY = 3f;
+
+	public static string GetDisplayWord(string word)
+	{
+		if (string.IsNullOrEmpty(word))
+			return string.Empty;
+		if (word.Length < 3)
+			return word;
+		return string.Format ("<color=#0074FF>{0}</color>{1}<color=#FF004F>{2}</color>", 
+			word.Substring(0, 1).ToUpper(), 
+			word.Substring(1, word.Length - 2).ToLower(), 
+			word.Substring(word.Length - 1, 1).ToLower());
+	}
+
 	#endregion
 
 	#region SAVE && LOAD
@@ -58,11 +72,34 @@ public class CGameSetting {
 
 	#endregion
 
+	#region BACKGROUNDS
+
 	public static string[] BACKGROUND_PATHS = new string[] {
 		"Images/board_ground",
 		//"Images/board_green",
 		"Images/board_grey",
 		//"Images/board_red"	
 	};
+
+	#endregion
+
+	#region SETTING
+
+	public static string SOUND_MUTE = "SOUND_MUTE";
+
+	public static bool SETTING_SOUND_MUTE
+	{
+		get
+		{
+			return PlayerPrefs.GetInt(SOUND_MUTE, 1) == 1;
+		}
+		set
+		{
+			PlayerPrefs.SetInt(SOUND_MUTE, value ? 1 : 0);
+			PlayerPrefs.Save();
+		}
+	}
+
+	#endregion
 	
 }

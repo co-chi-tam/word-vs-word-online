@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class CPlayerDisplayItem : MonoBehaviour {
 
 	protected Image m_AvatarImage;
+	protected Image m_CurrentTurnMaskImage;
 	protected Animator m_Animator;
 
 	protected virtual void Awake()
@@ -16,6 +17,7 @@ public class CPlayerDisplayItem : MonoBehaviour {
 	public virtual void Init()
 	{
 		this.m_AvatarImage = this.transform.Find("Container/AvatarImage").GetComponent<Image>();
+		this.m_CurrentTurnMaskImage = this.transform.Find("Container/CurrentTurnMaskImage").GetComponent<Image>();
 		this.m_Animator = this.GetComponent<Animator>();
 	}
 
@@ -24,9 +26,12 @@ public class CPlayerDisplayItem : MonoBehaviour {
 		this.m_AvatarImage.sprite = CGameSetting.GetAvatarSprite(avatarIndex);
 	}
 
-	public virtual void Active()
+	public virtual void Active(bool value)
 	{
-		this.SetAnimator("IsActive");
+		if (value)
+			this.SetAnimator("IsActive");
+		
+		this.m_CurrentTurnMaskImage.gameObject.SetActive (value);
 	}
 
 	public virtual void SetAnimator(string name, object value = null)

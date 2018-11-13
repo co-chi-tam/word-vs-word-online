@@ -131,6 +131,7 @@ public class CConfirmPopup : CDefaultPopup {
 			{
 				leftSubmit();
 			}
+			CSoundManager.Instance.Play ("sfx_click");
 			this.SetInteractableButtons(false);
 		});
 	} 
@@ -155,6 +156,7 @@ public class CConfirmPopup : CDefaultPopup {
 			{
 				leftSubmit();
 			}
+			CSoundManager.Instance.Play ("sfx_click");
 			this.SetInteractableButtons(false);
 		});
 		this.m_RightButton.onClick.AddListener(() => { 
@@ -162,6 +164,7 @@ public class CConfirmPopup : CDefaultPopup {
 			{
 				rightSubmit();
 			}
+			CSoundManager.Instance.Play ("sfx_click");
 			this.SetInteractableButtons(false);
 		});
 	} 
@@ -188,6 +191,7 @@ public class CConfirmPopup : CDefaultPopup {
 			{
 				leftSubmit();
 			}
+			CSoundManager.Instance.Play ("sfx_click");
 			this.SetInteractableButtons(false);
 		});
 		this.m_MiddleButton.onClick.AddListener(() => { 
@@ -195,6 +199,7 @@ public class CConfirmPopup : CDefaultPopup {
 			{
 				middleSubmit();
 			}
+			CSoundManager.Instance.Play ("sfx_click");
 			this.SetInteractableButtons(false);
 		});
 		this.m_RightButton.onClick.AddListener(() => { 
@@ -202,6 +207,7 @@ public class CConfirmPopup : CDefaultPopup {
 			{
 				rightSubmit();
 			}
+			CSoundManager.Instance.Play ("sfx_click");
 			this.SetInteractableButtons(false);
 		});
 	} 

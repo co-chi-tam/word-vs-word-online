@@ -26,17 +26,28 @@ public class CRoomItem : MonoBehaviour {
 		this.m_RoomNameText = this.transform.Find("Container/RoomNameText").GetComponent<Text>();
 	}
 
-	public virtual void Setup(string name, string display, System.Action<string> callback)
+	public virtual void UpdateRoom(string name, string display)
 	{
 		// ROOM NAME
 		this.m_RoomName = name;
 		this.m_RoomNameText.text = display;
+	}
+
+	public virtual void Setup(string name, string display, System.Action<string> callback)
+	{
+		// UI
+		this.UpdateRoom(name, display);
 		// BUTTON
 		this.m_EnterRoomButton.onClick.RemoveAllListeners();
 		this.m_EnterRoomButton.onClick.AddListener(() => {
 			if(callback != null)
 				callback(this.m_RoomName);
 		});
+	}
+
+	public virtual void SetEnable(bool value)
+	{
+		this.m_EnterRoomButton.interactable = value;
 	}
 	
 }
