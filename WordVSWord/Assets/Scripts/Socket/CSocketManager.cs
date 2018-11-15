@@ -24,6 +24,7 @@ public class CSocketManager : CMonoSingleton<CSocketManager> {
 
 	// EVENTS
 	public Action OnConnect;
+	public Action OnDisconnect;
 	public Action OnError;
 	public Action OnBeepBoop;
 
@@ -70,7 +71,7 @@ public class CSocketManager : CMonoSingleton<CSocketManager> {
 		{
 			this.m_Socket.autoConnect = autoConnect;
 			this.m_Socket.Connect();
-			if (this.m_Socket.IsConnected) 
+			if (this.m_Socket.IsConnected)
 			{
 				if (this.OnConnect != null)
 				{
@@ -89,16 +90,14 @@ public class CSocketManager : CMonoSingleton<CSocketManager> {
 
 	public virtual void On(string ev, Action<SocketIOEvent> callback)
 	{
-		if (this.m_Socket == null 
-			|| this.m_Socket.IsConnected == false)
-			return;	
+		if (this.m_Socket == null)
+			return;
 		this.m_Socket.On (ev, callback);
 	}
 
 	public virtual void Off(string ev, Action<SocketIOEvent> callback)
 	{
-		if (this.m_Socket == null 
-			|| this.m_Socket.IsConnected == false)
+		if (this.m_Socket == null)
 			return;
 		this.m_Socket.Off (ev, callback);
 	}
@@ -178,43 +177,43 @@ public class CSocketManager : CMonoSingleton<CSocketManager> {
 	/// Send room message chat.
 	/// </summary>
 	public void SendMessageRoomChat(string msg = "Hey, i'm Norman.") {
+		#if SOCKET_IO_DEBUG
+		Debug.Log ("SendMessageRoomChat");
+		#endif
 		if (this.m_Socket.IsConnected == false) {
 			this.m_Socket.Connect();
 		}
 		var roomData = new JSONObject();
 		roomData.AddField("message", msg);
 		this.Emit("sendRoomChat", roomData);
-		#if SOCKET_IO_DEBUG
-		Debug.Log ("SendMessageRoomChat");
-		#endif
 	}
 
 	/// <summary>
 	/// Send World message chat.
 	/// </summary>
 	public void SendMessageWorldChat(string msg = "Hey, i'm Norman.") {
+		#if SOCKET_IO_DEBUG
+		Debug.Log ("SendMessageWorldChat");
+		#endif
 		if (this.m_Socket.IsConnected == false) {
 			this.m_Socket.Connect();
 		}
 		var roomData = new JSONObject();
 		roomData.AddField("message", msg);
 		this.Emit("sendWorldChat", roomData);
-		#if SOCKET_IO_DEBUG
-		Debug.Log ("SendMessageWorldChat");
-		#endif
 	}
 
 	/// <summary>
 	/// Emit leave room.
 	/// </summary>
 	public void LeaveRoom() {
+		#if SOCKET_IO_DEBUG
+		Debug.Log ("leaveRoom");
+		#endif
 		if (this.m_Socket.IsConnected == false) {
 			this.m_Socket.Connect();
 		}
 		this.Emit("leaveRoom");
-		#if SOCKET_IO_DEBUG
-		Debug.Log ("leaveRoom");
-		#endif
 	}
 
 	#endregion
@@ -229,6 +228,10 @@ public class CSocketManager : CMonoSingleton<CSocketManager> {
 		#if SOCKET_IO_DEBUG
 		Debug.Log("[SocketIO] Connect received: " + e.name + " " + e.data);
 		#endif
+		if (this.OnConnect != null)
+		{
+			this.OnConnect();
+		}
 	}
 
 	/// <summary>
@@ -256,6 +259,8 @@ public class CSocketManager : CMonoSingleton<CSocketManager> {
 	/// </summary>
 	public void ReceiveErrorMsg(SocketIOEvent e)
 	{
+		if (e == null || e.data == null)
+			return;
 		#if SOCKET_IO_DEBUG
 		Debug.Log("[SocketIO] Error received: " + e.name + " " + e.data);
 		#endif
@@ -274,6 +279,10 @@ public class CSocketManager : CMonoSingleton<CSocketManager> {
 		#if SOCKET_IO_DEBUG
 		Debug.Log("[SocketIO] Close received: " + e.name + " " + e.data);
 		#endif
+		if (this.OnDisconnect != null)
+		{
+			this.OnDisconnect();
+		}
 	}
 
 	/// <summary>
@@ -307,8 +316,19 @@ public class CSocketManager : CMonoSingleton<CSocketManager> {
 		var lastMessage = this.m_RemainError[this.m_RemainError.Count - 1];
 		var confirm = CRootManager.Instance.ShowPopup("ConfirmPopup") as CConfirmPopup;
 		confirm.Show("ERROR", lastMessage, "OK", () => {
-			confirm.OnEscapeObject();
+			confirm.OnBackPress();
 		});
+	}
+
+	#endregion
+
+	#region PUBLIC
+
+	public bool IsConnected()
+	{
+		if (this.m_Socket == null)
+			return false;
+		return this.m_Socket.IsConnected;
 	}
 
 	#endregion

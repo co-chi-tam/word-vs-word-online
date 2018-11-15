@@ -1,8 +1,14 @@
 
+const DELTA_TIMER = 1;
+
 function GameRoom() {
     // Room data.
     this.roomName = '';
-	this.roomTimer = 300;
+    this.roomTimer = 300;
+
+    this.timeLimitToAnswer = 30;
+    this.answerTimer = 30;
+
 	this.roomState = 'WAITING_PLAYER'; // WAITING_PLAYER | PLAYING_GAME | END_GAME
     // All players 
     this.players = [];
@@ -13,17 +19,33 @@ function GameRoom() {
 
     // UPDATE PER SECONDS.
     this.updateTimer = function() {
-		if (this.roomState != 'PLAYING_GAME')
-			return;
-		this.roomTimer -= 1;
-		if (this.roomTimer <= 0)
+		if (this.roomState == 'PLAYING_GAME')
 		{
-			this.roomState = 'END_GAME';
-			this.endGame();
-		} 
-		else
-		{
-			this.emitAll ('countDownTimer', { roomTimer: this.roomTimer });
+			this.roomTimer -= DELTA_TIMER;
+			if (this.roomTimer <= 0)
+			{
+				this.roomState = 'END_GAME';
+				this.endGame();
+			} 
+			else
+			{
+				// TIMER TO ROOM
+				this.emitAll ('countDownTimer', { roomTimer: this.roomTimer });
+				// TIMER TO ANSWER
+				var currentPlayer = this.currentPlayer();
+				if (currentPlayer)
+				{
+					if (this.answerTimer > 0)
+					{
+						currentPlayer.emit("counterDownAnswer", { answerTimer: this.answerTimer });
+					}
+					else
+					{
+						this.passTurn(currentPlayer.player);
+					}
+					this.answerTimer -= DELTA_TIMER;
+				}
+			}
 		}
     }
 
@@ -32,11 +54,40 @@ function GameRoom() {
         return this.turnLists.length % this.maximumPlayers; 
     }
 
+    // GET CURRENT PLAYER
+    this.currentPlayer = function() {
+        var index = this.currentTurn();
+        if (index > -1)
+        {
+            return this.players[index];
+        }
+        return null;
+    }
+
     // ADD TURN
-    this.addTurn = function(playerName, word, suffix, point) {
-        this.turnLists.push({ player: playerName, word: word, point: point });
+    this.addTurn = function(player, suffix, word, point) {
+        this.turnLists.push({ player: player, word: word, point: point });
+        // TIMER
+        this.answerTimer = this.timeLimitToAnswer;
         // UPDATE CURRENT CHAR
         this.currentChar = suffix;
+    }
+
+    // PASS TURN
+    this.passTurn = function(player)
+    {
+        // PASS VALUE
+        this.turnLists.push({ player: player, word: '#####', point: 0 });
+        // TIMER
+        this.answerTimer = this.timeLimitToAnswer;
+        // EMIT PASS TURN
+        var currentTurn = this.currentTurn(); 
+        this.emitAll('onePassTurn', {
+            goldCost: 3,
+            lastIndex: currentTurn - 1,
+            turnIndex: currentTurn,
+            nextCharacter: this.currentChar
+        });
     }
 	
 	// END GAME
@@ -44,26 +95,35 @@ function GameRoom() {
 		var sum = {};
 		for (let i = 0; i < this.players.length; i++) {
 			const ply = this.players[i];
-			if (typeof(sum [ply.player.playerName]) == 'undefined')
+			if (ply && typeof(sum [ply.player.playerName]) == 'undefined')
             {
                 sum[ply.player.playerName] = { point: 0 };
             }
 		}
 		for (let i = 0; i < this.turnLists.length; i++) {
-			const ply = this.turnLists[i];
-			sum[ply.player].point += this.turnLists[i].point;
+			const turn = this.turnLists[i];
+			if (turn.player && typeof(sum [turn.player.playerName]) != 'undefined')
+            {
+				sum[turn.player.playerName].point += turn.point;
+			}
 		}
 		var results = [];
 		for (let i = 0; i < this.players.length; i++) {
 			const ply = this.players[i];
-			results.push ({ playerName: ply.player.playerName, sum: sum[ply.player.playerName].point });
+			if (ply)
+			{
+				results.push ({ player: ply.player, sum: sum[ply.player.playerName].point });
+			}
 		}
 		// RESULT
-		this.emitAll ('endGameResult', { results: results });
+		this.emitAll ('endGameResult', { roomState: this.roomState, results: results });
 		// CLEAR ROOM
 		for (let i = 0; i < this.players.length; i++) {
             const ply = this.players[i];
-			ply.room = null;
+			if (ply)
+			{
+				ply.room = null;
+			}
         }
         this.players = [];
         this.turnLists = [];
@@ -72,14 +132,13 @@ function GameRoom() {
 
     // IS EXIST WORD
     this.isExistWord = function(word) {
-        return this.turnLists.findIndex (i => i.word.trim() === word) > -1;
+        return this.turnLists.findIndex (i => i.word.trim() == word.trim()) > -1;
     }
 
     // Join room and set turn index for player
     this.join = function (player) {
         if (this.players.indexOf (player) == -1) {
             this.players.push (player);
-            this.setTurnIndex();
         }
     };
 	
@@ -98,12 +157,9 @@ function GameRoom() {
 
     // Clear room
     this.clearRoom = function() {
-        for (let i = 0; i < this.players.length; i++) {
-            const ply = this.players[i];
-            ply.emit('clearRoom', {
-                msg: "Room is empty or player is quit."
-            });
-        }
+        this.emitAll ('clearRoom', {
+            msg: "Room is empty or player disconnected."
+        });
         this.players = [];
         this.turnLists = [];
         this.currentChar = 'a';
@@ -113,9 +169,10 @@ function GameRoom() {
     
     // Leave room 
     this.leave = function(player) {
-        if (this.players.indexOf (player) > -1) {
-            this.players.splice (this.players.indexOf (player), 1);
-            console.log ('User LEAVE ROOM...' + player.player);
+        var index = this.players.indexOf (player);
+        if (index > -1) {
+            this.players.splice (index, 1);
+            // console.log ('User LEAVE ROOM...' + player.player);
         }
     };
     
@@ -124,6 +181,31 @@ function GameRoom() {
         for (let i = 0; i < this.players.length; i++) {
             const player = this.players[i];
             player.emit(name, obj);
+        }
+    };
+
+    // Send all mesg for players in room except one.
+    this.emitAllExcept = function (socket, name_sok, obj_sok, name_oth, obj_oth) {
+        var index = this.players.indexOf (socket);
+        // console.log ('emitAllExcept ' + index);
+        for (let i = 0; i < this.players.length; i++) {
+            const player = this.players[i];
+            // IS SOCKET
+            if (i == index)
+            {
+                if (obj_sok)
+                    player.emit(name_sok, obj_sok);
+                else
+                    player.emit(name_sok);
+            }
+            // OTHER SOCKET
+            else
+            {
+                if (obj_oth)
+                    player.emit(name_oth, obj_oth);
+                else
+                    player.emit(name_oth);
+            }
         }
     };
 

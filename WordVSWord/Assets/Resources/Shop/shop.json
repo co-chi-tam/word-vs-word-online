@@ -1,0 +1,124 @@
+{
+    "shopItems": 
+    [
+        {
+            "displaySprite": "Images/board_grey",
+            "price": 100,
+            "type": 1,
+            "value": 1,
+            "isUsing": false
+        }, 
+        {
+            "displaySprite": "Images/board_green",
+            "price": 100,
+            "type": 1,
+            "value": 2,
+            "isUsing": false
+        }, 
+        {
+            "displaySprite": "Images/board_red",
+            "price": 100,
+            "type": 1,
+            "value": 3,
+            "isUsing": false
+        }, 
+        {
+            "displaySprite": "Avatars/avatar-icon-9",
+            "price": 100,
+            "type": 2,
+            "value": 9,
+            "isUsing": false
+        }, 
+        {
+            "displaySprite": "Avatars/avatar-icon-10",
+            "price": 100,
+            "type": 2,
+            "value": 10,
+            "isUsing": false
+        }, 
+        {
+            "displaySprite": "Avatars/avatar-icon-11",
+            "price": 100,
+            "type": 2,
+            "value": 11,
+            "isUsing": false
+        }, 
+        {
+            "displaySprite": "Avatars/avatar-icon-12",
+            "price": 100,
+            "type": 2,
+            "value": 12,
+            "isUsing": false
+        }, 
+        {
+            "displaySprite": "Avatars/avatar-icon-13",
+            "price": 100,
+            "type": 2,
+            "value": 13,
+            "isUsing": false
+        }, 
+        {
+            "displaySprite": "Avatars/avatar-icon-14",
+            "price": 100,
+            "type": 2,
+            "value": 14,
+            "isUsing": false
+        }, 
+        {
+            "displaySprite": "Avatars/avatar-icon-15",
+            "price": 100,
+            "type": 2,
+            "value": 15,
+            "isUsing": false
+        }, 
+        {
+            "displaySprite": "Avatars/avatar-icon-16",
+            "price": 100,
+            "type": 2,
+            "value": 16,
+            "isUsing": false
+        }, 
+        {
+            "displaySprite": "Avatars/avatar-icon-17",
+            "price": 100,
+            "type": 2,
+            "value": 17,
+            "isUsing": false
+        }, 
+        {
+            "displaySprite": "Avatars/avatar-icon-18",
+            "price": 100,
+            "type": 2,
+            "value": 18,
+            "isUsing": false
+        }, 
+        {
+            "displaySprite": "Avatars/avatar-icon-19",
+            "price": 100,
+            "type": 2,
+            "value": 19,
+            "isUsing": false
+        }, 
+        {
+            "displaySprite": "Avatars/avatar-icon-20",
+            "price": 100,
+            "type": 2,
+            "value": 20,
+            "isUsing": false
+        }, 
+        {
+            "displaySprite": "Avatars/avatar-icon-21",
+            "price": 100,
+            "type": 2,
+            "value": 21,
+            "isUsing": false
+        }, 
+        {
+            "displaySprite": "Avatars/avatar-icon-22",
+            "price": 100,
+            "type": 2,
+            "value": 22,
+            "isUsing": false
+        }
+    ]
+}

@@ -12,6 +12,7 @@
         {"@type":"CConfirmPopup","sceneObjectName":"ConfirmPopup","sceneObjectModel":"ConfirmPopup"},
         {"@type":"CLobbyPopup","sceneObjectName":"LobbyPopup","sceneObjectModel":"LobbyPopup"},
         {"@type":"CMatchResultPopup","sceneObjectName":"MatchResultPopup","sceneObjectModel":"MatchResultPopup"},
-        {"@type":"CKeyBoardPopup","sceneObjectName":"KeyBoardPopup","sceneObjectModel":"KeyBoardPopup"}
+        {"@type":"CKeyBoardPopup","sceneObjectName":"KeyBoardPopup","sceneObjectModel":"KeyBoardPopup"},
+        {"@type":"CShopPopup","sceneObjectName":"ShopPopup","sceneObjectModel":"ShopPopup"}
     ]
 }

@@ -70,7 +70,7 @@ public class CDefaultObjectScene : IDefaultObjectScene {
 		
 	}
 
-	public virtual void OnEscapeObject()
+	public virtual void OnBackPress()
 	{
 		CRootManager.Instance.Back();
 	}

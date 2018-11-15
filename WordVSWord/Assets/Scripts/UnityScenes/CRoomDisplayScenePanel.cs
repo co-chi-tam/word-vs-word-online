@@ -19,6 +19,7 @@ public class CRoomDisplayScenePanel : CDefaultScene {
 	protected GameObject m_SoundOnImage;
 	protected GameObject m_SoundOffImage;
 
+	protected Button m_OpenShopButton;
 
 	protected Text m_GoldDisplayText;
 
@@ -60,6 +61,8 @@ public class CRoomDisplayScenePanel : CDefaultScene {
 		this.m_SoundOnImage = CRootManager.FindObjectWith(GameObject, "SoundOnImage");
 		this.m_SoundOffImage.SetActive (CGameSetting.SETTING_SOUND_MUTE);
 		this.m_SoundOnImage.SetActive (!CGameSetting.SETTING_SOUND_MUTE);
+		CSoundManager.Instance.MuteAll (CGameSetting.SETTING_SOUND_MUTE);
+		this.m_OpenShopButton = CRootManager.FindObjectWith(GameObject, "OpenShopButton").GetComponent<Button>();
 		// GOLD
 		this.m_GoldDisplayText = CRootManager.FindObjectWith (GameObject, "GoldDisplayText").GetComponent<Text>();
 		// OFF EVENTS
@@ -76,6 +79,7 @@ public class CRoomDisplayScenePanel : CDefaultScene {
 		this.m_ExitButton.onClick.AddListener(this.OnExitClick);
 		this.m_OpenChatButton.onClick.AddListener (this.OnOpenChatClick);
 		this.m_SoundOnOffButton.onClick.AddListener (this.OnSoundOnOffClick);
+		this.m_OpenShopButton.onClick.AddListener (this.OnOpenShopClick);
 	}
 
 	public override void OnStartObject()
@@ -92,7 +96,7 @@ public class CRoomDisplayScenePanel : CDefaultScene {
 		base.OnDestroyObject();
 	}
 
-	public override void OnEscapeObject()
+	public override void OnBackPress()
 	{
 		// base.OnEscapeObject();
 	}
@@ -168,12 +172,12 @@ public class CRoomDisplayScenePanel : CDefaultScene {
 		// JOIN RANDOM
 		var confirm = CRootManager.Instance.ShowPopup("ConfirmPopup") as CConfirmPopup;
 		confirm.Show("JOIN ROOM", "Do you want joint random a room on list ??", "OK", () => {
-			confirm.OnEscapeObject();
+			confirm.OnBackPress();
 			var randomRoom = this.m_Rooms[Random.Range(0, this.m_Rooms.Count)];
 			this.JoinRoom(randomRoom.roomName);
 			this.SetEnableSelectRooms (false);
 		}, "CANCEL", () => {
-			confirm.OnEscapeObject();
+			confirm.OnBackPress();
 			this.SetEnableSelectRooms (true);
 		});
 		CSoundManager.Instance.Play ("sfx_click");
@@ -219,6 +223,16 @@ public class CRoomDisplayScenePanel : CDefaultScene {
 		this.m_SoundOffImage.SetActive (CGameSetting.SETTING_SOUND_MUTE);
 		this.m_SoundOnImage.SetActive (!CGameSetting.SETTING_SOUND_MUTE);
 		CSoundManager.Instance.MuteAll (CGameSetting.SETTING_SOUND_MUTE);
+		CSoundManager.Instance.Play ("sfx_click");
+	}
+
+	private void OnOpenShopClick()
+	{
+		var shop = CRootManager.Instance.ShowPopup("ShopPopup") as CShopPopup;
+		shop.GetUpdateData(() => {
+			// GOLD DISPLAY
+			this.m_GoldDisplayText.text = CGameSetting.USER_GOLD.ToString();
+		});
 		CSoundManager.Instance.Play ("sfx_click");
 	}
 

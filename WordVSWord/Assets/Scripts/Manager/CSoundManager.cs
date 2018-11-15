@@ -5,6 +5,8 @@ using SimpleSingleton;
 
 public class CSoundManager : CMonoSingleton<CSoundManager> {
 
+	#region Fields
+
 	protected List<AudioSource> m_AudioSources;
 
 	protected Dictionary<string, AudioClip> m_AudioMaps;
@@ -13,11 +15,19 @@ public class CSoundManager : CMonoSingleton<CSoundManager> {
 
 	protected bool m_IsMuteAll = false;
 
+	#endregion
+
+	#region Implementation Monobehaviour
+
 	protected override void Awake()
 	{
 		base.Awake();
 		DontDestroyOnLoad (this.gameObject);
 	}
+
+	#endregion
+
+	#region Main methods
 
 	public virtual void Init()
 	{
@@ -117,5 +127,7 @@ public class CSoundManager : CMonoSingleton<CSoundManager> {
 	{
 		return string.Format("Sounds/{0}", name);
 	}
+
+	#endregion
 
 }

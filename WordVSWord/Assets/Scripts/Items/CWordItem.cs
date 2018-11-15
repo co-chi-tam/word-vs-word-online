@@ -40,11 +40,11 @@ public class CWordItem : MonoBehaviour {
 		this.m_Animator = this.GetComponent<Animator>();
 	}
 
-	public virtual void Setup(int index, int avatar, string word)
+	public virtual void Setup(int frame, int avatar, string word)
 	{
 		// BG
-		var bgPath = CGameSetting.BACKGROUND_PATHS[index % CGameSetting.BACKGROUND_PATHS.Length];
-		this.m_BackgroundImage.sprite = Resources.Load<Sprite>(bgPath);
+		var bgPath = CGameSetting.BACKGROUND_PATHS[frame % CGameSetting.BACKGROUND_PATHS.Length];
+		this.m_BackgroundImage.sprite = CGameSetting.GetSprite (bgPath);
 		// UI
 		this.m_AvatarImage.sprite = CGameSetting.GetAvatarSprite(avatar);
 		this.m_WordText.text = word;

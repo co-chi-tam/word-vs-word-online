@@ -17,6 +17,8 @@ public class CChatRoomScenePanel : CDefaultScene {
 
 	protected Button m_QuitButton;
 
+	protected int m_MaximumChat = 50;
+	protected List<string> m_ListChat;
 	protected float m_ChatDelay = -1f;
 
 	#endregion
@@ -43,7 +45,7 @@ public class CChatRoomScenePanel : CDefaultScene {
 		// UI
 		this.m_PlayerNameText = CRootManager.FindObjectWith(GameObject, "PlayerNameText").GetComponent<Text>(); 
 		this.m_ChatRoomText = CRootManager.FindObjectWith(GameObject, "ChatRoomText").GetComponent<Text>();
-		this.m_ChatRoomText.text = string.Empty;
+		this.m_ChatRoomText.text = "...World chat...";
 		this.m_ChatScrollRect = CRootManager.FindObjectWith (GameObject, "ChatScrollRect").GetComponent<ScrollRect>();
 		this.m_ChatInputField = CRootManager.FindObjectWith(GameObject, "ChatInputField").GetComponent<InputField>();
 		this.m_SubmitChatButton = CRootManager.FindObjectWith (GameObject, "SubmitChatButton").GetComponent<Button>();
@@ -53,6 +55,8 @@ public class CChatRoomScenePanel : CDefaultScene {
 		// EVENTS
 		this.m_SubmitChatButton.onClick.AddListener (this.OnSubmitWorldChat);
 		this.m_QuitButton.onClick.AddListener (this.OnQuitClick);
+		// CHAT ULTILITIES
+		this.m_ListChat = new List<string>();
 	}
 
 	public override void OnStartObject()
@@ -84,8 +88,10 @@ public class CChatRoomScenePanel : CDefaultScene {
 	{
 		var user = ev.data.GetField("user").ToString().Replace("\"", string.Empty);
 		var msg = ev.data.GetField("message").ToString().Replace("\"", string.Empty);
-		var display = string.Format("<b><color=#00B3FF>[{0}]</color></b>: {1}\n", user, msg);
-		this.m_ChatRoomText.text += display;
+		var display = this.GetFormatChat(user, msg, user.Equals(CGameSetting.USER_NAME) ? "#FF3B3B" : "#00B3FF");
+		// ADD DISPLAY
+		this.m_ListChat.Add (display);
+		this.UpdateChatText();
 		this.m_ChatScrollRect.verticalNormalizedPosition = 0;
 	}
 
@@ -110,12 +116,34 @@ public class CChatRoomScenePanel : CDefaultScene {
 		CSoundManager.Instance.Play ("sfx_click");
 	}
 
+	private void UpdateChatText()
+	{
+		var chatText = "";
+		// 0 < 50 < max 
+		var min = this.m_ListChat.Count <= this.m_MaximumChat ? 0 : this.m_ListChat.Count - this.m_MaximumChat;
+		var max = this.m_ListChat.Count;
+		for (int i = min; i < max; i++)
+		{
+			chatText += this.m_ListChat[i];
+		}
+		this.m_ChatRoomText.text = chatText;
+	}
+
 	private void OnQuitClick()
 	{
 		CRootManager.Instance.Back();
 		CSoundManager.Instance.Play ("sfx_click");
 	}
 	
+	#endregion
+
+	#region Private
+
+	public string GetFormatChat(string user, string msg, string color = "#00B3FF")
+	{
+		return string.Format("<b><color={0}>[{1}]</color></b>: {2}\n", color, user, msg);
+	}
+
 	#endregion
 
 }

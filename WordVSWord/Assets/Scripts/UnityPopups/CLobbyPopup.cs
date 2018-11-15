@@ -54,6 +54,11 @@ public class CLobbyPopup : CDefaultPopup {
 		this.m_QuitButton.onClick.RemoveAllListeners();
 	}
 
+	public override void OnBackPress()
+	{
+		// base.OnEscapeObject();
+	}
+
 	#endregion
 
 	#region PUBLIC
@@ -83,7 +88,7 @@ public class CLobbyPopup : CDefaultPopup {
 			}
 		}
 		// CLOSE
-		this.OnEscapeObject();
+		this.OnBackPress();
 	}
 
 	public virtual void Show(string title, string body)

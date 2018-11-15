@@ -14,6 +14,7 @@ public class CRootManager: CMonoSingleton<CRootManager> {
 	protected Dictionary<string, CDefaultScene> m_SceneMaps = new Dictionary<string, CDefaultScene>();
 	protected Dictionary<string, CDefaultPopup> m_PopupMaps = new Dictionary<string, CDefaultPopup>();
 	protected Stack<string> m_RoadMap = new Stack<string>();
+	[SerializeField]	protected CDefaultObjectScene m_RootObject = null;
 	[SerializeField]	protected CDefaultScene m_CurrentScene = null;
 	[SerializeField]	protected CDefaultPopup m_CurrentPopup = null;
 
@@ -28,6 +29,8 @@ public class CRootManager: CMonoSingleton<CRootManager> {
 	{
 		// CONFIGS
 		this.LoadConfigs();
+		// SCREEN
+		Screen.sleepTimeout = SleepTimeout.NeverSleep;
 	}
 
 	protected virtual void FixedUpdate()
@@ -40,6 +43,15 @@ public class CRootManager: CMonoSingleton<CRootManager> {
 	{
 		this.UpdateCurrentScene();
 		this.UpdateCurrentPopup();
+		// ROOT
+		if (this.m_RootObject != null)
+		{
+			// PRESSED ESC
+			if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Home))
+			{
+				this.m_RootObject.OnBackPress();
+			}
+		}
 	}
 
 	#endregion
@@ -109,6 +121,11 @@ public class CRootManager: CMonoSingleton<CRootManager> {
 		this.m_RoadMap.Push(name);
 	}
 
+	public virtual void ClearRoadMap()
+	{
+		this.m_RoadMap.Clear();
+	}
+
 	public virtual void Back()
 	{
 		if (this.m_RoadMap.Count < 2)
@@ -159,6 +176,8 @@ public class CRootManager: CMonoSingleton<CRootManager> {
 		// ROAD MAP
 		if (savePath)
 			this.AddRoadMap (sceneName);
+		// ROOT OBJECT
+		this.m_RootObject = this.m_SceneMaps[sceneName];
 		// CURRENT SCENE
 		if (this.m_CurrentScene != null 
 			&& this.m_CurrentScene.sceneObjectName == sceneName)
@@ -226,11 +245,6 @@ public class CRootManager: CMonoSingleton<CRootManager> {
 			return;
 		// UPDATE
 		this.m_CurrentScene.OnUpdateObject(Time.deltaTime);
-		// PRESSED ESC
-		if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Home))
-		{
-			this.m_CurrentScene.OnEscapeObject();
-		}
 	}
 
 	#endregion
@@ -246,6 +260,8 @@ public class CRootManager: CMonoSingleton<CRootManager> {
 		// ROAD MAP
 		if (savePath)
 			this.AddRoadMap (popupName);
+		// ROOT OBJECT
+		this.m_RootObject = this.m_PopupMaps[popupName];
 		// CURRENT POPUP
 		if (this.m_CurrentPopup != null 
 			&& this.m_CurrentPopup.sceneObjectName == popupName)
@@ -343,7 +359,6 @@ public class CRootManager: CMonoSingleton<CRootManager> {
 				result = Instantiate(inResource);
 				result.transform.SetParent (this.m_TopCanvas.transform);
 			}
-			Debug.Log("BBB " + name);
 		}
 		result.transform.localPosition = Vector3.zero;
 		result.transform.localRotation = Quaternion.identity;

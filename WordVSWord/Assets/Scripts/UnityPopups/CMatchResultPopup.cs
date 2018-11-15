@@ -9,9 +9,10 @@ public class CMatchResultPopup : CDefaultPopup {
 
 	protected GameObject m_BodyPanel;
 	protected Button m_QuitButton;
+	protected Button m_AdmobButton;
 
 	protected CResultItem m_ResultItemPrefab;
-	protected CResultItem[] m_ResultItems;
+	protected List<CResultItem> m_ResultItems;
 
 	protected Animator m_Animator;
 	
@@ -40,16 +41,22 @@ public class CMatchResultPopup : CDefaultPopup {
 		this.m_BodyPanel = CRootManager.FindObjectWith(GameObject, "BodyPanel");
 		// QUIT
 		this.m_QuitButton = CRootManager.FindObjectWith(GameObject, "QuitButton").GetComponent<Button>();
+		this.m_AdmobButton = CRootManager.FindObjectWith (GameObject, "AdmobButton").GetComponent<Button>();
+		this.m_AdmobButton.onClick.AddListener (this.OnAdmobClick);
 		// RESULTS
 		this.m_ResultItemPrefab = Resources.Load<CResultItem>("Items/ResultItem");
-		this.m_ResultItems = new CResultItem[4];
+		this.m_ResultItems = new List<CResultItem>();
 		// ANIMATOR
 		this.m_Animator = CRootManager.FindObjectWith(GameObject, "Container").GetComponent<Animator>();
+		//Admob
+		CAdmobManager.LoadRewardedVideo();
 	}
 
 	public override void OnStartObject()
 	{
 		base.OnStartObject();
+		// ADMOB
+		this.m_AdmobButton.interactable = CGameSetting.IsTimerToAd(CGameSetting.DELAY_TO_AD);
 	}
 
 	public override void OnDestroyObject()
@@ -61,39 +68,35 @@ public class CMatchResultPopup : CDefaultPopup {
 
 	#region Public
 
-	public virtual void Show(List<JSONObject> results, System.Action quitSubmit)
+	public virtual void Show(List<JSONObject> results, System.Action callback)
 	{
 		// RESULTS
-		if (this.m_ResultItems.Length != results.Count)
+		for (int i = 0; i < results.Count; i++)
 		{
-			this.m_ResultItems = new CResultItem[results.Count];
-		}
-		for (int i = 0; i < this.m_ResultItems.Length; i++)
-		{
-			if (this.m_ResultItems[i] == null)
+			if (i >= this.m_ResultItems.Count) 
 			{
-				this.m_ResultItems[i] = GameObject.Instantiate(this.m_ResultItemPrefab);
-				this.m_ResultItems[i].transform.SetParent(this.m_BodyPanel.transform);
-				this.m_ResultItems[i].transform.localPosition = Vector3.zero;
-				this.m_ResultItems[i].transform.localRotation = Quaternion.identity;
-				this.m_ResultItems[i].transform.localScale = Vector3.one;
+				var item = GameObject.Instantiate(this.m_ResultItemPrefab);
+				item.transform.SetParent(this.m_BodyPanel.transform);
+				item.transform.localPosition = Vector3.zero;
+				item.transform.localRotation = Quaternion.identity;
+				item.transform.localScale = Vector3.one;
+				this.m_ResultItems.Add (item);
 			}
 			var player = results[i].GetField("player");
 			var avatar = int.Parse (player.GetField("playerAvatar").ToString());
 			var playerName = player.GetField("playerName").ToString().Replace("\"", string.Empty);
 			var score = int.Parse (results[i].GetField("sum").ToString());
-			this.m_ResultItems[i].Setup(avatar, playerName, score);
+			this.m_ResultItems[i].Setup(i, avatar, playerName, score);
 		}
 		// ANIMATOR
 		this.SetAnimator ("IsShow");
-		// BUTTON
+		// QUIT
 		this.m_QuitButton.onClick.RemoveAllListeners();
-		this.m_QuitButton.onClick.AddListener(() => { 
-			if (quitSubmit != null)
+		this.m_QuitButton.onClick.AddListener (() => {
+			if (callback != null)
 			{
-				quitSubmit();
+				callback();
 			}
-			CSoundManager.Instance.Play ("sfx_click");
 		});
 	} 
 
@@ -117,6 +120,29 @@ public class CMatchResultPopup : CDefaultPopup {
 		{
 			this.m_Animator.SetTrigger(name);
 		}
+	}
+
+	#endregion 
+
+	#region Private
+
+	private void OnAdmobClick()
+	{
+		CAdmobManager.OnVideoAdsReward -= this.OnHandleRewardAddGold;
+		if (CGameSetting.IsTimerToAd(CGameSetting.DELAY_TO_AD))
+		{
+			CAdmobManager.OnVideoAdsReward += this.OnHandleRewardAddGold;
+			CAdmobManager.ShowRewardedVideo();
+			CGameSetting.ResetTimerToAd();
+			this.m_AdmobButton.interactable = false;
+		}
+		CSoundManager.Instance.Play ("sfx_click");
+	}
+
+	private void OnHandleRewardAddGold()
+	{
+		CGameSetting.USER_GOLD += CMainGameScenePanel.CURRENT_GOLD_MATCH;
+		CAdmobManager.OnVideoAdsReward -= this.OnHandleRewardAddGold;
 	}
 
 	#endregion 

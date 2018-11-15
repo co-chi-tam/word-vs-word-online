@@ -8,7 +8,7 @@ public interface IDefaultObjectScene {
 	void OnFixedUpdateObject(float fdt);
 	void OnUpdateObject(float dt);
 	void OnDestroyObject();
-	void OnEscapeObject();
+	void OnBackPress();
 
 	void SetActive(bool value);
 	void SetObjectSceneAnimator(string name, object value);

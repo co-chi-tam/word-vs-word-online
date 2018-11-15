@@ -96,7 +96,7 @@ public class CConfirmPopup : CDefaultPopup {
 			}
 		}
 		// CLOSE
-		this.OnEscapeObject();
+		this.OnBackPress();
 	}
 
 	public virtual void Show(string title, string body)
@@ -116,7 +116,6 @@ public class CConfirmPopup : CDefaultPopup {
 
 	public virtual void Show(string title, string body, string buttonLeft, System.Action leftSubmit)
 	{
-		Debug.Log (body);
 		// TITLE && BODY
 		this.Show(title, body);
 		// UI

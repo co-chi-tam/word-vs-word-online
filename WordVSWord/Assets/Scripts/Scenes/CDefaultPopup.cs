@@ -45,9 +45,9 @@ public class CDefaultPopup: CDefaultObjectScene {
 		base.OnDestroyObject();
 	}
 
-	public override void OnEscapeObject()
+	public override void OnBackPress()
 	{
-		base.OnEscapeObject();
+		base.OnBackPress();
 	}
 
 	#endregion

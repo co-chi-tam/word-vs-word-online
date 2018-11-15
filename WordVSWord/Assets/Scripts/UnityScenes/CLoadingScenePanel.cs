@@ -32,25 +32,24 @@ public class CLoadingScenePanel : CDefaultScene {
 		base.OnInitObject();
 		// INIT SOCKET
 		CSocketManager.Instance.Init();
+		CPlayerManager.GetInstance();
+		// EVENTS
+		CSocketManager.Instance.OnConnect += this.OnConnectSocket;
 	}
 
 	public override void OnStartObject()
 	{
 		base.OnStartObject();
-		// EVENTS
-		CSocketManager.Instance.OnConnect -= this.OnConnectSocket;
-		CSocketManager.Instance.OnConnect += this.OnConnectSocket;
 		// CONNECT
 		CSocketManager.Instance.Connect(true);
 	}
 
 	public override void OnDestroyObject()
 	{
-		// EVENTS
-		CSocketManager.Instance.OnConnect -= this.OnConnectSocket;
+		base.OnDestroyObject();
 	}
 
-	public override void OnEscapeObject()
+	public override void OnBackPress()
 	{
 		// base.OnEscapeObject();
 	}
@@ -62,11 +61,13 @@ public class CLoadingScenePanel : CDefaultScene {
 	protected IEnumerator HandleMoveNextScene()
 	{
 		yield return this.m_ShortTime;
-		CRootManager.Instance.ShowScene("SetingUserPanel");
+		CRootManager.Instance.ShowScene("SetingUserPanel", true);
 	}
 
 	private void OnConnectSocket()
 	{
+		if (this.GameObject.activeInHierarchy == false)	
+			return;
 		CRootManager.Instance.StopCoroutine(this.HandleMoveNextScene());
 		CRootManager.Instance.StartCoroutine(this.HandleMoveNextScene());
 	}

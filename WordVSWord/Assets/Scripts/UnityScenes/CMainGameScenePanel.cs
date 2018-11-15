@@ -38,6 +38,8 @@ public class CMainGameScenePanel : CDefaultScene {
 
 	protected string m_EMPTY_WORD = "Enter word here...";
 
+	public static int CURRENT_GOLD_MATCH = 0;
+
 	#endregion
 
 
@@ -125,6 +127,7 @@ public class CMainGameScenePanel : CDefaultScene {
 		this.m_WordLists.TrimExcess();
 		// GOLD
 		this.m_GoldDisplayText.text = CGameSetting.USER_GOLD.ToString();
+		CURRENT_GOLD_MATCH = 0;
 	}
 
 	public override void OnDestroyObject()
@@ -139,6 +142,8 @@ public class CMainGameScenePanel : CDefaultScene {
 		// REMOVE LIST
 		this.m_WordLists.Clear();
 		this.m_WordLists.TrimExcess();
+		// GOLD
+		CURRENT_GOLD_MATCH = 0;
 	}
 	
 	#endregion
@@ -149,20 +154,17 @@ public class CMainGameScenePanel : CDefaultScene {
 	{
 		var confirm = CRootManager.Instance.ShowPopup("ConfirmPopup") as CConfirmPopup;
 		confirm.Show("QUIT ROOM", "Do you want quit room ?", "OK", () => {
-			// AFTER 1 minute.
-			CSocketManager.Instance.EmitAfter(1f, "leaveRoom", () => {
-				confirm.OnEscapeObject();
-				this.OnQuitRoom();
-			});
+			this.OnQuitRoom();
+			confirm.OnBackPress();
 		}, "CANCEL", () => {
-			confirm.OnEscapeObject();
+			confirm.OnBackPress();
 		});
 		CSoundManager.Instance.Play ("sfx_click");
 	}
 
 	private void OnAddGold (SocketIO.SocketIOEvent ev)
 	{
-		 CGameSetting.USER_GOLD += int.Parse (ev.data.GetField("gold").ToString());
+		CURRENT_GOLD_MATCH += int.Parse (ev.data.GetField("gold").ToString());
 		// GOLD
 		this.m_GoldDisplayText.text = CGameSetting.USER_GOLD.ToString();
 	}
@@ -175,7 +177,6 @@ public class CMainGameScenePanel : CDefaultScene {
 		for (int i = 0; i < players.Count; i++)
 		{
 			display += string.Format ("Player: {0} - READY\n", players[i].GetField("playerName"));
-
 		}
 		var lobby = CRootManager.Instance.ShowPopup("LobbyPopup") as CLobbyPopup;
 		lobby.Show("PLEASE WAIT !!!", display, this.OnQuitClick);
@@ -219,7 +220,7 @@ public class CMainGameScenePanel : CDefaultScene {
 	private void OnReceiveNewWord(SocketIO.SocketIOEvent ev)
 	{
 		// ANSWER
-		var lastIndex = int.Parse (ev.data.GetField("lastIndex").ToString());
+		// var lastIndex = int.Parse (ev.data.GetField("lastIndex").ToString());
 		// GAME TURN
 		var currentTurn = int.Parse (ev.data.GetField("turnIndex").ToString());
 		this.SetCurrenTurn(currentTurn);
@@ -230,9 +231,10 @@ public class CMainGameScenePanel : CDefaultScene {
 		this.SetCurrentCharacter(currentPrefix);
 		// PLAYER 
 		var playerAvatar = int.Parse (ev.data.GetField("playerAvatar").ToString());
+		var frame = int.Parse (ev.data.GetField("playerFrame").ToString());
 		// WORD LIST
 		var displayWord = ev.data.GetField("displayWord").ToString().Replace("\"", string.Empty);
-		var item = this.DisplayAWord (lastIndex, playerAvatar, displayWord);
+		var item = this.DisplayAWord (frame, playerAvatar, displayWord);
 		this.m_WordLists.Add (item);
 		// GOLD COST
 		var goldCost = int.Parse (ev.data.GetField("goldCost").ToString());
@@ -249,7 +251,9 @@ public class CMainGameScenePanel : CDefaultScene {
 	{
 		// WORD SUGGEST
 		var wordSuggest = ev.data.GetField("wordSuggest").ToString().Replace("\"", string.Empty);
-		this.m_WordInputText.text = wordSuggest;
+		this.m_WordInputText.text = CGameSetting.GetDisplayWord(wordSuggest);
+		this.m_WordInputString = wordSuggest;
+		CRootManager.Instance.BackTo ("MainGamePanel");
 		// GOLD COST
 		var goldCost = int.Parse (ev.data.GetField("goldCost").ToString());
 		CGameSetting.USER_GOLD -= goldCost;
@@ -290,15 +294,15 @@ public class CMainGameScenePanel : CDefaultScene {
 		this.SetCurrentCharacter(currentPrefix);
 	}
 
-	private CWordItem DisplayAWord(int answerIndex, int avatar, string displayWord)
+	private CWordItem DisplayAWord(int frame, int avatar, string displayWord)
 	{
 		var item = this.GetFromCache();
 		item.transform.SetParent(this.m_ListWordContent.transform);
 		item.transform.localPosition = Vector3.zero;
 		item.transform.localRotation = Quaternion.identity;
 		item.transform.localScale = Vector3.one;
-		item.Setup (answerIndex, avatar, displayWord);
 		item.gameObject.SetActive(true);
+		item.Setup (frame, avatar, displayWord);
 		return item;
 	}
 
@@ -317,7 +321,7 @@ public class CMainGameScenePanel : CDefaultScene {
 		{
 			return;
 		}
-		this.SendWord(textAnswer);
+		this.SendWord(textAnswer, CGameSetting.USER_FRAME);
 		this.m_WordInputString = string.Empty;
 		this.m_WordInputText.text = this.m_EMPTY_WORD;
 		CSoundManager.Instance.Play ("sfx_click");
@@ -338,12 +342,12 @@ public class CMainGameScenePanel : CDefaultScene {
 		keyboard.Setup((value) => {
 			this.m_WordInputString = value;
 			this.m_WordInputText.text = CGameSetting.GetDisplayWord(value);
-			keyboard.OnEscapeObject();
+			keyboard.OnBackPress();
 		});
 		CSoundManager.Instance.Play ("sfx_click");
 	}
 
-	private void SendWord(string value)
+	private void SendWord(string value, int frame)
 	{
 		var wordData = new JSONObject();
 		wordData.AddField ("turnIndex", this.m_CurrentTurnPlayer);
@@ -364,6 +368,7 @@ public class CMainGameScenePanel : CDefaultScene {
 		});
 		var resultPopup = CRootManager.Instance.ShowPopup("MatchResultPopup") as CMatchResultPopup;
 		resultPopup.Show(results, this.OnReceiveResults);
+		CGameSetting.USER_GOLD += CURRENT_GOLD_MATCH; 
 	}
 
 	private void OnReceiveResults()

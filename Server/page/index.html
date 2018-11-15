@@ -11,17 +11,9 @@
       var prefixWord = '';
       function setUsername() {
          socket.emit('setPlayerName', 
-         { 'playerAvatar': 0, 'playerName': document.getElementById('name').value });
+         { 'playerAvatar': 0, 'playerName': document.getElementById('name').value, 'playerFrame': 0 });
       };
       var user;
-      socket.on('playerExists', function(data) {
-         document.getElementById('error-container').innerHTML = data;
-      });
-      socket.on('userSet', function(data) {
-         user = data.username;
-         document.body.innerHTML = '<input type = "text" id = "message">\
-         <button type = "button" name = "button" onclick = "sendMessage()">Send</button>';
-      });
       function sendMessage() {
          var msg = document.getElementById('message').value;
          if(msg) {
@@ -57,11 +49,18 @@
 	  {
 			socket.emit('suggestWord', { prefix: prefix });
 	  }
+	  function SendChatWord()
+	  {
+			socket.emit('sendWorldChat', { message: 'This is my chat...' });
+	  }
       socket.on('playerNameSet', function(data) {
             console.log (JSON.stringify(data));
       });
       socket.on('updateRoomStatus', function(data) {
             console.log (JSON.stringify(data));
+      });
+	  socket.on('updateRoomSize', function(data) {
+            console.log ('updateRoomSize ' + JSON.stringify(data));
       });
 	  socket.on ('joinRoomFailed', function(data) {
             console.log ('joinRoomFailed ' + JSON.stringify(data));
@@ -89,17 +88,23 @@
             console.log ('allRoomGetWord ' + JSON.stringify(data));
 			prefix = data.nextCharacter;
       });
-	  socket.on ('receiveSuggestWord', function(data) {
+      socket.on ('receiveSuggestWord', function(data) {
             console.log ('receiveSuggestWord ' + JSON.stringify(data));
 			document.getElementById('word').value = data.wordSuggest;
       });
-	  socket.on ('endGameResult', function(data) {
+	socket.on ('endGameResult', function(data) {
             console.log ('endGameResult ' + JSON.stringify(data));
       });
-	  // socket.on ('countDownTimer', function(data) {
-            // console.log ('countDownTimer ' + JSON.stringify(data));
+	socket.on ('onePassTurn', function(data) {
+            console.log ('onePassTurn ' + JSON.stringify(data));
+      });
+      // socket.on ('counterDownAnswer', function(data) {
+      //       console.log ('counterDownAnswer ' + JSON.stringify(data));
       // });
-      socket.on ('msgError', function(data) {
+      socket.on ('msgWorldChat', function(data) {
+            console.log ('msgWorldChat ' + JSON.stringify(data));
+      });
+	  socket.on ('msgError', function(data) {
             console.log ('msgError ' + JSON.stringify(data));
       });
       setInterval(function(){
@@ -131,6 +136,9 @@
       </button>
 	   <button type = "button" name = "button" onclick = "RequestSuggestWord()">
             SUGGEST WORD
+      </button>
+	   <button type = "button" name = "button" onclick = "SendChatWord()">
+            SEND CHAT WORD
       </button>
    </body>
 </html>

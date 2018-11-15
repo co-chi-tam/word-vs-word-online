@@ -363,7 +363,6 @@ bid
 bidet
 bifocals
 big
-big-rig
 bijou
 bike
 bikini
@@ -414,7 +413,6 @@ blueberry
 boar
 board
 boat
-boat-building
 boatload
 boatyard
 bobcat
@@ -450,7 +448,6 @@ bother
 bottle
 bottling
 bottom
-bottom-line
 boudoir
 bough
 boundary
@@ -509,7 +506,6 @@ brood
 brook
 broom
 brother
-brother-in-law
 brow
 brown
 brush
@@ -531,7 +527,6 @@ bulb
 bull
 bulldozer
 bullet
-bull-fighter
 bumper
 bun
 bunch
@@ -541,7 +536,6 @@ bunkhouse
 burglar
 burlesque
 burn
-burn-out
 burst
 bus
 bush
@@ -658,8 +652,6 @@ cauliflower
 cause
 caution
 cave
-c-clamp
-cd
 ceiling
 celebration
 celeriac
@@ -745,7 +737,6 @@ chin
 chino
 chip
 chipmunk
-chit-chat
 chivalry
 chive
 chocolate
@@ -945,9 +936,7 @@ cookie
 cooking
 coonskin
 cope
-cop-out
 copper
-co-producer
 copy
 copyright
 copywriter
@@ -978,7 +967,6 @@ councilor
 councilperson
 count
 counter
-counter-force
 countess
 country
 county
@@ -1036,8 +1024,6 @@ croissant
 crook
 crop
 cross
-cross-contamination
-cross-stitch
 crotch
 croup
 crow
@@ -1050,7 +1036,6 @@ crystallography
 cub
 cuckoo
 cucumber
-cuff-links
 cultivar
 cultivator
 culture
@@ -1335,7 +1320,6 @@ east
 eat
 eave
 eavesdropper
-e-book
 ecclesia
 eclipse
 ecliptic
@@ -1417,7 +1401,6 @@ equinox
 equipment
 equivalent
 era
-e-reader
 error
 escape
 ese
@@ -1436,7 +1419,6 @@ eurocentrism
 europe
 evaluator
 evening
-evening-wear
 event
 eviction
 evidence
@@ -1453,7 +1435,6 @@ excuse
 executor
 exercise
 exhaust
-ex-husband
 exile
 existence
 exit
@@ -1468,7 +1449,6 @@ extension
 extent
 external
 extreme
-ex-wife
 eye
 eyeball
 eyebrow
@@ -1496,7 +1476,6 @@ fairies
 fairy
 faith
 fall
-falling-out
 fame
 familiar
 family
@@ -1504,13 +1483,11 @@ fan
 fang
 fanlight
 fanny
-fanny-pack
 farm
 farmer
 fascia
 fat
 father
-father-in-law
 fatigues
 faucet
 fault
@@ -1592,7 +1569,6 @@ fleece
 flesh
 flight
 flintlock
-flip-flops
 flock
 flood
 floor
@@ -1620,7 +1596,6 @@ foot
 football
 footnote
 footrest
-foot-rest
 footstool
 foray
 force
@@ -1692,7 +1667,6 @@ gaffer
 gain
 gaiters
 gale
-gall-bladder
 gallery
 galley
 gallon
@@ -1700,7 +1674,6 @@ galn
 galoshes
 game
 gamebird
-gamma-ray
 gander
 gap
 garage
@@ -1769,7 +1742,6 @@ gobbler
 god
 godmother
 goggles
-go-kart
 gold
 goldfish
 golf
@@ -1777,11 +1749,9 @@ gondola
 gong
 good
 goodbye
-good-bye
 goodie
 goose
 gopher
-gore-tex
 gorilla
 gosling
 gossip
@@ -1790,7 +1760,6 @@ government
 governor
 gown
 grab
-grab-bag
 grade
 grain
 gram
@@ -1813,8 +1782,6 @@ gratitude
 gray
 grease
 great
-great-grandfather
-great-grandmother
 greek
 green
 greenhouse
@@ -1859,8 +1826,6 @@ hail
 hair
 haircut
 half
-half-brother
-half-sister
 halibut
 hall
 hallway
@@ -1871,7 +1836,6 @@ hammock
 hamster
 hand
 handball
-hand-holding
 handicap
 handle
 handlebar
@@ -1885,7 +1849,6 @@ hardboard
 hardcover
 hardening
 hardhat
-hard-hat
 hardware
 harm
 harmonica
@@ -1913,7 +1876,6 @@ heart
 heartache
 hearth
 hearthside
-heart-throb
 heartwood
 heat
 heater
@@ -1943,7 +1905,6 @@ heyday
 hide
 high
 highlight
-high-rise
 highway
 hill
 hip
@@ -1988,7 +1949,6 @@ host
 hostel
 hostess
 hot
-hot-dog
 hotel
 hour
 hourglass
@@ -2029,7 +1989,6 @@ hypothermia
 ice
 icebreaker
 icecream
-ice-cream
 icicle
 icon
 idea
@@ -2073,11 +2032,9 @@ inglenook
 ingrate
 initial
 initiative
-in-joke
 injury
 injustice
 ink
-in-laws
 inlay
 inn
 innervation
@@ -2197,7 +2154,6 @@ keyboard
 keyboarding
 keystone
 kick
-kick-off
 kid
 kidney
 kidneys
@@ -2223,7 +2179,6 @@ knee
 kneejerk
 knickers
 knife
-knife-edge
 knight
 knitting
 knot
@@ -2406,7 +2361,6 @@ mailman
 main
 maintenance
 major
-major-league
 make
 makeup
 male
@@ -2533,10 +2487,8 @@ mini
 minibus
 minimum
 minion
-mini-skirt
 minister
 minor
-minor-league
 mint
 minute
 mirror
@@ -2593,7 +2545,6 @@ most
 motel
 moth
 mother
-mother-in-law
 motion
 motor
 motorboat
@@ -2620,13 +2571,10 @@ muscle
 musculature
 museum
 music
-music-box
-music-making
 mustache
 mustard
 mutt
 mycoplasma
-n
 nail
 name
 naming
@@ -2737,7 +2685,6 @@ offer
 office
 officer
 official
-off-ramp
 oil
 okra
 oldie
@@ -2913,7 +2860,6 @@ pearl
 pedal
 peen
 peer
-peer-to-peer
 pegboard
 pelican
 pelt
@@ -2986,7 +2932,6 @@ pimp
 pimple
 pin
 pinafore
-pince-nez
 pine
 pineapple
 pinecone
@@ -3039,7 +2984,6 @@ plywood
 pneumonia
 pocket
 pocketbook
-pocket-watch
 poem
 poet
 poetry
@@ -3153,7 +3097,6 @@ promotion
 prompt
 pronunciation
 proof
-proof-reader
 propane
 property
 proposal
@@ -3394,7 +3337,6 @@ robin
 rock
 rocker
 rocket
-rocket-ship
 rod
 role
 roll
@@ -3506,7 +3448,6 @@ screen
 screenwriting
 screw
 screwdriver
-screw-up
 scrim
 scrip
 script
@@ -3597,7 +3538,6 @@ shoat
 shock
 shoe
 shoehorn
-shoe-horn
 shoelace
 shoemaker
 shoes
@@ -3617,7 +3557,6 @@ shoulder
 shovel
 show
 shower
-show-stopper
 shred
 shrimp
 shrine
@@ -3651,7 +3590,6 @@ single
 sink
 sir
 sister
-sister-in-law
 sitar
 site
 situation
@@ -3834,7 +3772,6 @@ starter
 state
 statement
 station
-station-wagon
 statistic
 status
 stay
@@ -3847,21 +3784,10 @@ steeple
 stem
 stencil
 step
-step-aunt
-step-brother
 stepdaughter
-step-daughter
-step-father
-step-grandfather
-step-grandmother
 stepmother
-step-mother
-stepping-stone
 steps
-step-sister
 stepson
-step-son
-step-uncle
 stew
 stick
 stiletto
@@ -3871,7 +3797,6 @@ stitch
 stock
 stocking
 stockings
-stock-in-trade
 stole
 stomach
 stone
@@ -3886,7 +3811,6 @@ storey
 storm
 story
 storyboard
-story-telling
 stove
 strain
 strait
@@ -4014,7 +3938,6 @@ talk
 tam
 tambour
 tambourine
-tam-o'-shanter
 tandem
 tangerine
 tank
