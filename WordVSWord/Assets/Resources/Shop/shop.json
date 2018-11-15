@@ -23,6 +23,27 @@
             "isUsing": false
         }, 
         {
+            "displaySprite": "Images/board_ground_1",
+            "price": 100,
+            "type": 1,
+            "value": 4,
+            "isUsing": false
+        }, 
+        {
+            "displaySprite": "Images/board_ground_2",
+            "price": 100,
+            "type": 1,
+            "value": 4,
+            "isUsing": false
+        }, 
+        {
+            "displaySprite": "Images/board_ground_3",
+            "price": 100,
+            "type": 1,
+            "value": 5,
+            "isUsing": false
+        }, 
+        {
             "displaySprite": "Avatars/avatar-icon-9",
             "price": 100,
             "type": 2,

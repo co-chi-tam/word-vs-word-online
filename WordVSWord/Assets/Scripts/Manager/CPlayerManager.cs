@@ -81,8 +81,9 @@ public class CPlayerManager : CMonoSingleton<CPlayerManager> {
 
 	private void HandleCloseApplication()
 	{
-		if (Application.isPlaying)
-			Application.Quit();
+#if !UNITY_EDITOR
+		Application.Quit();
+#endif
 	}
 
 	private bool IsConnectInternet()

@@ -146,7 +146,10 @@ public class CGameSetting {
 		"Images/board_ground",
 		"Images/board_grey",
 		"Images/board_green",
-		"Images/board_red"	
+		"Images/board_red",
+		"Images/board_ground_1",
+		"Images/board_ground_2",
+		"Images/board_ground_3"	
 	};
 
 	#endregion
