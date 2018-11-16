@@ -15,14 +15,11 @@ public class CPlayerManager : CMonoSingleton<CPlayerManager> {
 	protected override void Awake()
 	{
 		base.Awake();
-		DontDestroyOnLoad (this.gameObject);
 	}
 
 	protected virtual void Start()
 	{
 		StartCoroutine (this.HandleConnectInternet());
-		CSocketManager.Instance.OnConnect += this.HandleAuthorizePlayer;
-		// CSocketManager.Instance.OnDisconnect += this.HandleCloseApplication;
 	}
 
 	protected virtual void OnApplicationFocus(bool focusStatus)
@@ -35,7 +32,10 @@ public class CPlayerManager : CMonoSingleton<CPlayerManager> {
 		if (pauseStatus == false 
 			&& CSetingUserScenePanel.USER_AUTHORIZE_READY)
 		{
-			CSocketManager.Instance.Connect(true);
+			CSocketManager.Instance.Disconnect();
+			CAdmobManager.DestroyBanner();
+			CAdmobManager.DestroyRewardedVideo();
+			SceneManager.LoadScene (SceneManager.GetActiveScene().name);
 		}
 	}
 

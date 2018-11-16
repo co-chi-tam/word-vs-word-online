@@ -37,7 +37,6 @@ public class CSocketManager : CMonoSingleton<CSocketManager> {
 	protected override void Awake()
 	{
 		base.Awake();
-		DontDestroyOnLoad(this.gameObject);
 	}
 
 	protected virtual void OnApplicationQuit()
