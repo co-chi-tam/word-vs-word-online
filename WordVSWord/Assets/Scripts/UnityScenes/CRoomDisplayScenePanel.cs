@@ -18,6 +18,7 @@ public class CRoomDisplayScenePanel : CDefaultScene {
 	protected Button m_SoundOnOffButton;
 	protected GameObject m_SoundOnImage;
 	protected GameObject m_SoundOffImage;
+	protected Button m_ShowTutorialButton;
 
 	protected Button m_OpenShopButton;
 
@@ -62,6 +63,7 @@ public class CRoomDisplayScenePanel : CDefaultScene {
 		this.m_SoundOffImage.SetActive (CGameSetting.SETTING_SOUND_MUTE);
 		this.m_SoundOnImage.SetActive (!CGameSetting.SETTING_SOUND_MUTE);
 		CSoundManager.Instance.MuteAll (CGameSetting.SETTING_SOUND_MUTE);
+		this.m_ShowTutorialButton = CRootManager.FindObjectWith(GameObject, "ShowTutorialButton").GetComponent<Button>();
 		this.m_OpenShopButton = CRootManager.FindObjectWith(GameObject, "OpenShopButton").GetComponent<Button>();
 		// GOLD
 		this.m_GoldDisplayText = CRootManager.FindObjectWith (GameObject, "GoldDisplayText").GetComponent<Text>();
@@ -79,6 +81,7 @@ public class CRoomDisplayScenePanel : CDefaultScene {
 		this.m_ExitButton.onClick.AddListener(this.OnExitClick);
 		this.m_OpenChatButton.onClick.AddListener (this.OnOpenChatClick);
 		this.m_SoundOnOffButton.onClick.AddListener (this.OnSoundOnOffClick);
+		this.m_ShowTutorialButton.onClick.AddListener (this.OnShowTutorialClick);
 		this.m_OpenShopButton.onClick.AddListener (this.OnOpenShopClick);
 	}
 
@@ -128,6 +131,10 @@ public class CRoomDisplayScenePanel : CDefaultScene {
 			return;
 		this.m_RoomLoaded = true;
 		var receiveRooms = ev.data.GetField("rooms").list;
+		for (int i = 0; i < this.m_Rooms.Count; i++)
+		{
+			this.m_Rooms[i].gameObject.SetActive(false);
+		}
 		for (int i = 0; i < receiveRooms.Count; i++)
 		{
 			if (i >= this.m_Rooms.Count)
@@ -146,6 +153,7 @@ public class CRoomDisplayScenePanel : CDefaultScene {
 			var roomDisplay = string.Format("{0}: {1}/{2}", roomName, players, maxPlayers);
 			this.m_Rooms[i].Setup(roomName, roomDisplay, this.JoinRoom);
 			this.m_Rooms[i].SetEnable (true);
+			this.m_Rooms[i].gameObject.SetActive(true);
 		}
 	}
 
@@ -224,6 +232,11 @@ public class CRoomDisplayScenePanel : CDefaultScene {
 		this.m_SoundOnImage.SetActive (!CGameSetting.SETTING_SOUND_MUTE);
 		CSoundManager.Instance.MuteAll (CGameSetting.SETTING_SOUND_MUTE);
 		CSoundManager.Instance.Play ("sfx_click");
+	}
+
+	private void OnShowTutorialClick()
+	{
+		CRootManager.Instance.ShowPopup("TutorialPopup");
 	}
 
 	private void OnOpenShopClick()

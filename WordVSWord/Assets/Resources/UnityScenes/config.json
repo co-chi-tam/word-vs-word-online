@@ -13,6 +13,7 @@
         {"@type":"CLobbyPopup","sceneObjectName":"LobbyPopup","sceneObjectModel":"LobbyPopup"},
         {"@type":"CMatchResultPopup","sceneObjectName":"MatchResultPopup","sceneObjectModel":"MatchResultPopup"},
         {"@type":"CKeyBoardPopup","sceneObjectName":"KeyBoardPopup","sceneObjectModel":"KeyBoardPopup"},
-        {"@type":"CShopPopup","sceneObjectName":"ShopPopup","sceneObjectModel":"ShopPopup"}
+        {"@type":"CShopPopup","sceneObjectName":"ShopPopup","sceneObjectModel":"ShopPopup"},
+        {"@type":"CTutorialPopup","sceneObjectName":"TutorialPopup","sceneObjectModel":"TutorialPopup"}
     ]
 }

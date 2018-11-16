@@ -48,8 +48,6 @@ public class CMatchResultPopup : CDefaultPopup {
 		this.m_ResultItems = new List<CResultItem>();
 		// ANIMATOR
 		this.m_Animator = CRootManager.FindObjectWith(GameObject, "Container").GetComponent<Animator>();
-		//Admob
-		CAdmobManager.LoadRewardedVideo();
 	}
 
 	public override void OnStartObject()
@@ -70,6 +68,10 @@ public class CMatchResultPopup : CDefaultPopup {
 
 	public virtual void Show(List<JSONObject> results, System.Action callback)
 	{
+		for (int i = 0; i < this.m_ResultItems.Count; i++)
+		{
+			this.m_ResultItems[i].gameObject.SetActive(false);
+		}
 		// RESULTS
 		for (int i = 0; i < results.Count; i++)
 		{
@@ -87,6 +89,7 @@ public class CMatchResultPopup : CDefaultPopup {
 			var playerName = player.GetField("playerName").ToString().Replace("\"", string.Empty);
 			var score = int.Parse (results[i].GetField("sum").ToString());
 			this.m_ResultItems[i].Setup(i, avatar, playerName, score);
+			this.m_ResultItems[i].gameObject.SetActive(true);
 		}
 		// ANIMATOR
 		this.SetAnimator ("IsShow");

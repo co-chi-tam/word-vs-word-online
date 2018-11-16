@@ -12,6 +12,7 @@ public class CShopPopup : CDefaultPopup {
 	protected Button m_QuitButton;
 	protected Button m_AdmobButton;
 	protected Text m_AdmobRewardText;
+	protected ScrollRect m_ShopScrollRect;
 
 	protected CShopItem m_ShopItemPrefab;
 	protected TextAsset m_ShopConfig;
@@ -60,13 +61,12 @@ public class CShopPopup : CDefaultPopup {
 		this.m_AdmobButton.onClick.AddListener (this.OnAdmobClick);
 		this.m_AdmobRewardText = CRootManager.FindObjectWith (GameObject, "AdmobRewardText").GetComponent<Text>();
 		this.m_AdmobRewardText.text = string.Format ("+{0}", CGameSetting.GOLD_VIDEO_REWARD);
+		this.m_ShopScrollRect = CRootManager.FindObjectWith (GameObject, "ShopScrollRect").GetComponent<ScrollRect>();
 		// ITEM PREFAB
 		this.m_ShopItemPrefab = Resources.Load<CShopItem>("Items/ShopItem");
 		this.m_ShopConfig = Resources.Load<TextAsset>("Shop/shop");
 		this.m_OpenShop = new List<CShopItem>();
 		this.LoadConfig(this.m_ShopConfig.text);
-		//Admob
-		CAdmobManager.LoadRewardedVideo();
 	}
 
 	public override void OnStartObject()
@@ -76,6 +76,8 @@ public class CShopPopup : CDefaultPopup {
 		this.OnUpdateShop();
 		// ADMOB
 		this.m_AdmobButton.interactable = CGameSetting.IsTimerToAd(CGameSetting.DELAY_TO_AD);
+		// SCROLLRECT
+		this.m_ShopScrollRect.verticalNormalizedPosition = 1;
 	}
 
 	public override void OnDestroyObject()

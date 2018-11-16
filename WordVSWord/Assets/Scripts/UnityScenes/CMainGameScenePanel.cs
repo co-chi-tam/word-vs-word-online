@@ -11,6 +11,7 @@ public class CMainGameScenePanel : CDefaultScene {
 	protected Animator m_ContainerAnimator;
 	protected Text m_YourTurnText;
 
+	protected Button m_ShowTutorialButton;
 	protected Text m_CurrentCharacterText;
 	protected Text m_GoldDisplayText;
 	protected Text m_RoomTimerText;
@@ -67,6 +68,7 @@ public class CMainGameScenePanel : CDefaultScene {
 		// YOUR TURN PANEL
 		this.m_ContainerAnimator = CRootManager.FindObjectWith(GameObject, "Container").GetComponent<Animator>();
 		this.m_YourTurnText = CRootManager.FindObjectWith(GameObject, "YourTurnText").GetComponent<Text>();
+		this.m_ShowTutorialButton = CRootManager.FindObjectWith(GameObject, "ShowTutorialButton").GetComponent<Button>();
 		// GAME DISPLAY
 		this.m_GoldDisplayText = CRootManager.FindObjectWith(GameObject, "GoldDisplayText").GetComponent<Text>();
 		this.m_RoomTimerText = CRootManager.FindObjectWith (GameObject, "RoomTimerText").GetComponent<Text>();
@@ -111,6 +113,7 @@ public class CMainGameScenePanel : CDefaultScene {
 		CSocketManager.Instance.On("counterDownAnswer", this.OnCountDownAnswerTimer);
 		CSocketManager.Instance.On("onePassTurn", this.OnOnePassTurn);
 		// UI
+		this.m_ShowTutorialButton.onClick.AddListener (this.OnShowTutorialClick);
 		this.m_QuitButton.onClick.AddListener(this.OnQuitClick);
 		// WORD SUBMIT
 		this.m_SubmitButton.onClick.AddListener(this.OnSendWord);
@@ -383,6 +386,11 @@ public class CMainGameScenePanel : CDefaultScene {
 		// UI
 		this.m_SubmitButton.interactable = true;
 		CSocketManager.Instance.Invoke("ShowLastErrorPopup", 0f);
+	}
+
+	private void OnShowTutorialClick()
+	{
+		CRootManager.Instance.ShowPopup("TutorialPopup");
 	}
 
 	#endregion

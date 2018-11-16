@@ -33,8 +33,16 @@ public class CLoadingScenePanel : CDefaultScene {
 		// INIT SOCKET
 		CSocketManager.Instance.Init();
 		CPlayerManager.GetInstance();
+		// ADMOB
+		CAdmobManager.Init();
+		CAdmobManager.InitBanner();
+		CAdmobManager.InitRewardedVideo();
+		CAdmobManager.LoadBanner();
+		CAdmobManager.LoadRewardedVideo();
+		if (CGameSetting.HasTimeToAd() == false)
+			CGameSetting.ResetTimerToAd();
 		// EVENTS
-		CSocketManager.Instance.OnConnect += this.OnConnectSocket;
+		CSocketManager.Instance.On ("welcome", this.OnReceiveWelcome);
 	}
 
 	public override void OnStartObject()
@@ -58,10 +66,9 @@ public class CLoadingScenePanel : CDefaultScene {
 
 	#region Private
 
-	protected IEnumerator HandleMoveNextScene()
+	private void OnReceiveWelcome(SocketIO.SocketIOEvent ev)
 	{
-		yield return this.m_ShortTime;
-		CRootManager.Instance.ShowScene("SetingUserPanel", true);
+		this.OnConnectSocket();
 	}
 
 	private void OnConnectSocket()
@@ -70,6 +77,12 @@ public class CLoadingScenePanel : CDefaultScene {
 			return;
 		CRootManager.Instance.StopCoroutine(this.HandleMoveNextScene());
 		CRootManager.Instance.StartCoroutine(this.HandleMoveNextScene());
+	}
+
+	private IEnumerator HandleMoveNextScene()
+	{
+		yield return this.m_ShortTime;
+		CRootManager.Instance.ShowScene("SetingUserPanel", true);
 	}
 	
 	#endregion

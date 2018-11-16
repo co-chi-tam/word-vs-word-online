@@ -22,7 +22,7 @@ public class CPlayerManager : CMonoSingleton<CPlayerManager> {
 	{
 		StartCoroutine (this.HandleConnectInternet());
 		CSocketManager.Instance.OnConnect += this.HandleAuthorizePlayer;
-		CSocketManager.Instance.OnDisconnect += this.HandleCloseApplication;
+		// CSocketManager.Instance.OnDisconnect += this.HandleCloseApplication;
 	}
 
 	protected virtual void OnApplicationFocus(bool focusStatus)

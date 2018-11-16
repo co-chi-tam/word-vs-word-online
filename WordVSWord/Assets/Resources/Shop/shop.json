@@ -33,14 +33,14 @@
             "displaySprite": "Images/board_ground_2",
             "price": 100,
             "type": 1,
-            "value": 4,
+            "value": 5,
             "isUsing": false
         }, 
         {
             "displaySprite": "Images/board_ground_3",
             "price": 100,
             "type": 1,
-            "value": 5,
+            "value": 6,
             "isUsing": false
         }, 
         {

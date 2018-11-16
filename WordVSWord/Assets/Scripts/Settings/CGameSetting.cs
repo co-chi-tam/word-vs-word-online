@@ -138,6 +138,17 @@ public class CGameSetting {
 		}
 	}
 
+	private static string SAVE_SHOW_TUTORIAL = "SAVE_SHOW_TUTORIAL";
+	public static bool SHOW_TUTORIAL 
+	{
+		get { return PlayerPrefs.GetInt(SAVE_SHOW_TUTORIAL, 1) == 1; }
+		set 
+		{
+			PlayerPrefs.SetInt(SAVE_SHOW_TUTORIAL, value ? 1 : 0);
+			PlayerPrefs.Save();
+		}
+	}
+
 	#endregion
 
 	#region BACKGROUNDS

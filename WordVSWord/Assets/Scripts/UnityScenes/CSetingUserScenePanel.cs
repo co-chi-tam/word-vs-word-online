@@ -10,6 +10,7 @@ public class CSetingUserScenePanel : CDefaultScene {
 
 	protected InputField m_PlayerNameInputField;
 	protected Button m_SubmitButton;
+	protected Button m_ShowTutorialButton;
 	protected Button m_QuitButton;
 	protected GameObject m_AvatarGrid;
 	protected Toggle[] m_AvatarButtons;
@@ -42,6 +43,7 @@ public class CSetingUserScenePanel : CDefaultScene {
 		// UI
 		this.m_PlayerNameInputField = CRootManager.FindObjectWith(GameObject, "PlayerNameInputField").GetComponent<InputField>();
 		this.m_SubmitButton = CRootManager.FindObjectWith(GameObject, "SubmitButton").GetComponent<Button>();
+		this.m_ShowTutorialButton = CRootManager.FindObjectWith(GameObject, "ShowTutorialButton").GetComponent<Button>();
 		this.m_QuitButton = CRootManager.FindObjectWith(GameObject, "QuitButton").GetComponent<Button>();
 		// AVATAR
 		this.m_CurrentAvatarImage = CRootManager.FindObjectWith(GameObject, "CurrentAvatarImage").GetComponent<Image>();
@@ -59,13 +61,8 @@ public class CSetingUserScenePanel : CDefaultScene {
 		CSocketManager.Instance.On("msgError", this.ReceiveMessageError);
 		// EVENTS
 		this.m_SubmitButton.onClick.AddListener(this.OnSubmitClick);
+		this.m_ShowTutorialButton.onClick.AddListener (this.OnShowTutorialClick);
 		this.m_QuitButton.onClick.AddListener(this.OnQuitClick);
-		// ADMOB
-		CAdmobManager.Init();
-		CAdmobManager.InitBanner();
-		CAdmobManager.InitRewardedVideo();
-		if (CGameSetting.HasTimeToAd() == false)
-			CGameSetting.ResetTimerToAd();
 	}
 
 	public override void OnStartObject()
@@ -92,8 +89,6 @@ public class CSetingUserScenePanel : CDefaultScene {
 		this.m_CurrentAvatarImage.sprite = CGameSetting.GetAvatarSprite(CGameSetting.USER_AVATAR);
 		// SETTING
 		USER_AUTHORIZE_READY = false;
-		// ADMOB
-		CAdmobManager.LoadBanner();
 	}
 
 	public override void OnDestroyObject()
@@ -149,7 +144,7 @@ public class CSetingUserScenePanel : CDefaultScene {
 			}
 		}
 		// SET PLAYER NAME
-		SetPlayerInfo(CGameSetting.USER_NAME, CGameSetting.USER_AVATAR, CGameSetting.USER_FRAME);
+		this.SetPlayerInfo(CGameSetting.USER_NAME, CGameSetting.USER_AVATAR, CGameSetting.USER_FRAME);
 	}
 
 	private void ReceivePlayerName (SocketIO.SocketIOEvent ev) 
@@ -183,6 +178,11 @@ public class CSetingUserScenePanel : CDefaultScene {
 		}
 	}
 
+	private void OnShowTutorialClick()
+	{
+		CRootManager.Instance.ShowPopup("TutorialPopup");
+	}
+
 	private void OnQuitClick()
 	{
 		Application.Quit();
@@ -192,7 +192,7 @@ public class CSetingUserScenePanel : CDefaultScene {
 
 	#region Public
 
-	public static void SetPlayerInfo(string playerName, int avatarIndex, int frame) 
+	public void SetPlayerInfo(string playerName, int avatarIndex, int frame) 
 	{
 		// DATA
 		var userData = new JSONObject();
