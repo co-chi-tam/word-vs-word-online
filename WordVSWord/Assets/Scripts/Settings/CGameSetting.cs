@@ -51,6 +51,7 @@ public class CGameSetting {
 
 	#region TIMER TO ADS
 
+	public static bool IS_ADS_SHOW_ON_SCREEN = false;
     public static string SAVE_TIMER_TO_AD = "TIMER_TO_AD";
 	public static long DELAY_TO_AD = 45;
 

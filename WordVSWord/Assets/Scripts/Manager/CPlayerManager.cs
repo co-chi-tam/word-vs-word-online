@@ -29,13 +29,19 @@ public class CPlayerManager : CMonoSingleton<CPlayerManager> {
 
 	protected virtual void OnApplicationPause(bool pauseStatus)
 	{
-		if (pauseStatus == false 
-			&& CSetingUserScenePanel.USER_AUTHORIZE_READY)
+		if (pauseStatus == false)
 		{
-			CSocketManager.Instance.Disconnect();
-			CAdmobManager.DestroyBanner();
-			CAdmobManager.DestroyRewardedVideo();
-			SceneManager.LoadScene (SceneManager.GetActiveScene().name);
+			// AUTHORIZE
+			if (CSetingUserScenePanel.USER_AUTHORIZE_READY
+				&& CGameSetting.IS_ADS_SHOW_ON_SCREEN == false)
+			{
+				CSocketManager.Instance.Disconnect();
+				CAdmobManager.DestroyBanner();
+				CAdmobManager.DestroyRewardedVideo();
+				SceneManager.LoadScene (SceneManager.GetActiveScene().name);
+			}
+			// ADS SHOWING.
+			CGameSetting.IS_ADS_SHOW_ON_SCREEN = false;
 		}
 	}
 

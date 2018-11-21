@@ -220,6 +220,9 @@ public class CShopPopup : CDefaultPopup {
 			CGameSetting.ResetTimerToAd();
 			this.m_AdmobButton.interactable = false;
 		}
+		CSoundManager.Instance.Play ("sfx_click");
+		// ADS SHOWING.
+		CGameSetting.IS_ADS_SHOW_ON_SCREEN = true;
 	}
 
 	private void OnHandleRewardAddGold()
