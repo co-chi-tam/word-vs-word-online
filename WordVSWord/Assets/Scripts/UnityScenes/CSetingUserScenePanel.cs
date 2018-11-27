@@ -73,6 +73,7 @@ public class CSetingUserScenePanel : CDefaultScene {
 		// UI
 		this.m_SubmitButton.interactable = true;
 		this.m_PlayerNameInputField.interactable = true;
+		this.m_ShowTutorialButton.interactable = true;
 		this.EnableGridAvatars(true);
 		// PLAYER AVATAR
 		if (CGameSetting.USER_AVATAR < this.m_AvatarButtons.Length)
@@ -133,6 +134,7 @@ public class CSetingUserScenePanel : CDefaultScene {
 		// UI
 		this.m_SubmitButton.interactable = false;
 		this.m_PlayerNameInputField.interactable = false;
+		this.m_ShowTutorialButton.interactable = false;
 		this.EnableGridAvatars(false);
 		// AVATAR
 		for (int i = 0; i < this.m_AvatarButtons.Length; i++)
@@ -150,8 +152,9 @@ public class CSetingUserScenePanel : CDefaultScene {
 	private void ReceivePlayerName (SocketIO.SocketIOEvent ev) 
 	{
 		// UI
-		this.m_SubmitButton.interactable = true;
-		this.m_PlayerNameInputField.interactable = true;
+		// this.m_SubmitButton.interactable = true;
+		// this.m_PlayerNameInputField.interactable = true;
+		// this.m_ShowTutorialButton.interactable = true;
 		USER_AUTHORIZE_READY = true;
 		this.EnableGridAvatars(true);
 		// SWITCH SCENE
@@ -165,6 +168,7 @@ public class CSetingUserScenePanel : CDefaultScene {
 		// UI
 		this.m_SubmitButton.interactable = true;
 		this.m_PlayerNameInputField.interactable = true;
+		this.m_ShowTutorialButton.interactable = true;
 		USER_AUTHORIZE_READY = false;
 		this.EnableGridAvatars(true);
 		CSocketManager.Instance.Invoke("ShowLastErrorPopup", 0f);

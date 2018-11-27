@@ -224,6 +224,7 @@ var GameXO = function (http) {
                         // JOIN
                         rooms [roomName].join (socket);
 						socket.emit('joinRoomCompleted', {
+							roomName: roomName,
                             msg: "Join room completed."
                         });
 						// ALL MEMBERS IN ROOM

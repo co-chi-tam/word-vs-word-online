@@ -175,14 +175,15 @@ public class CMainGameScenePanel : CDefaultScene {
 	private void OnDisplayLobby(SocketIO.SocketIOEvent ev)
 	{
 		var room = ev.data.GetField("roomInfo");
+		var roomName = room.GetField("roomName").ToString().Replace("\"", string.Empty);
 		var players = room.GetField("players").list;
 		var display = string.Empty;
 		for (int i = 0; i < players.Count; i++)
 		{
-			display += string.Format ("Player: {0} - READY\n", players[i].GetField("playerName"));
+			display += string.Format ("p{0}: {1} - READY\n", i + 1, players[i].GetField("playerName"));
 		}
 		var lobby = CRootManager.Instance.ShowPopup("LobbyPopup") as CLobbyPopup;
-		lobby.Show("PLEASE WAIT !!!", display, this.OnQuitClick);
+		lobby.Show(roomName.ToUpper(), display, this.OnQuitClick);
 		CSoundManager.Instance.Play ("sfx_new_turn");
 	}
 
@@ -342,7 +343,7 @@ public class CMainGameScenePanel : CDefaultScene {
 	private void OnWordInputClick()
 	{
 		var keyboard = CRootManager.Instance.ShowPopup("KeyBoardPopup") as CKeyBoardPopup;
-		keyboard.Setup((value) => {
+		keyboard.Setup(this.m_CurrentPrefix, (value) => {
 			this.m_WordInputString = value;
 			this.m_WordInputText.text = CGameSetting.GetDisplayWord(value);
 			keyboard.OnBackPress();

@@ -108,12 +108,29 @@ public class CRoomDisplayScenePanel : CDefaultScene {
 
 	#region Private
 
+	protected virtual void JoinExistedRoom()
+	{
+		for (int i = 0; i < this.m_Rooms.Count; i++)
+		{
+			var room = this.m_Rooms[i];
+			if (room.roomMembers >= 0 && room.roomMembers < 4)
+			{
+				this.JoinRoom(room);
+				break;
+			}
+		}
+	}
+
+	protected virtual void JoinRoom(CRoomItem room)
+	{
+		this.JoinRoom(room.roomName);
+	}
+
 	protected virtual void JoinRoom(string name)
 	{
 		var sendData = new JSONObject();
 		sendData.AddField("roomName", name);
 		CSocketManager.Instance.Emit("joinOrCreateRoom", sendData);
-		CGameSetting.LAST_ROOM_NAME = name;
 		this.SetEnableSelectRooms (false);
 		CSoundManager.Instance.Play ("sfx_click");
 	}
@@ -121,6 +138,10 @@ public class CRoomDisplayScenePanel : CDefaultScene {
 	protected virtual void RequestRoomList()
 	{
 		this.m_RoomLoaded = false;
+		for (int i = 0; i < this.m_Rooms.Count; i++)
+		{
+			this.m_Rooms[i].gameObject.SetActive(false);
+		}
 		// EMIT
 		CSocketManager.Instance.Emit("getRoomsStatus");
 	}
@@ -148,10 +169,10 @@ public class CRoomDisplayScenePanel : CDefaultScene {
 			}
 			var room = receiveRooms[i];
 			var roomName = room.GetField("roomName").ToString().Replace("\"", "");
-			var players = room.GetField("players").ToString().Replace("\"", "");
+			var players = int.Parse (room.GetField("players").ToString());
 			var maxPlayers = room.GetField("maxPlayers").ToString().Replace("\"", "");
 			var roomDisplay = string.Format("{0}: {1}/{2}", roomName, players, maxPlayers);
-			this.m_Rooms[i].Setup(roomName, roomDisplay, this.JoinRoom);
+			this.m_Rooms[i].Setup(roomName, players, roomDisplay, this.JoinRoom);
 			this.m_Rooms[i].SetEnable (true);
 			this.m_Rooms[i].gameObject.SetActive(true);
 		}
@@ -160,14 +181,14 @@ public class CRoomDisplayScenePanel : CDefaultScene {
 	private void ReceiveRoomSize (SocketIO.SocketIOEvent ev) 
 	{
 		var roomName = ev.data.GetField("roomName").ToString().Replace("\"", "");
-		var players = ev.data.GetField("players").ToString().Replace("\"", "");
+		var players = int.Parse (ev.data.GetField("players").ToString());
 		var maxPlayers = ev.data.GetField("maxPlayers").ToString().Replace("\"", "");
 		var roomDisplay = string.Format("{0}: {1}/{2}", roomName, players, maxPlayers);
 		for (int i = 0; i < this.m_Rooms.Count; i++)
 		{
 			if (this.m_Rooms[i].roomName == roomName)
 			{
-				this.m_Rooms[i].Setup(roomName, roomDisplay, this.JoinRoom);
+				this.m_Rooms[i].Setup(roomName, players, roomDisplay, this.JoinRoom);
 				this.m_Rooms[i].SetEnable (true);
 				break;
 			}
@@ -179,10 +200,9 @@ public class CRoomDisplayScenePanel : CDefaultScene {
 		this.SetEnableSelectRooms (false);
 		// JOIN RANDOM
 		var confirm = CRootManager.Instance.ShowPopup("ConfirmPopup") as CConfirmPopup;
-		confirm.Show("JOIN ROOM", "Do you want joint random a room on list ??", "OK", () => {
+		confirm.Show("JOIN ROOM", "Do you want join existed room ?", "OK", () => {
 			confirm.OnBackPress();
-			var randomRoom = this.m_Rooms[Random.Range(0, this.m_Rooms.Count)];
-			this.JoinRoom(randomRoom.roomName);
+			this.JoinExistedRoom();
 			this.SetEnableSelectRooms (false);
 		}, "CANCEL", () => {
 			confirm.OnBackPress();
@@ -194,6 +214,7 @@ public class CRoomDisplayScenePanel : CDefaultScene {
 	private void OnJoinRoomCompleted(SocketIO.SocketIOEvent ev)
 	{
 		CRootManager.Instance.ShowScene("MainGamePanel");
+		CGameSetting.LAST_ROOM_NAME = ev.data.GetField("roomName").ToString().Replace("\"", "");
 		this.SetEnableSelectRooms (false);
 	}
 

@@ -12,6 +12,12 @@ public class CRoomItem : MonoBehaviour {
 		get { return this.m_RoomName; }
 		set { this.m_RoomName = value; }
 	}
+	protected int m_RoomMembers;
+	public int roomMembers 
+	{ 
+		get { return this.m_RoomMembers; }
+		set { this.m_RoomMembers = value; }
+	}
 	protected Button m_EnterRoomButton;
 	protected Text m_RoomNameText;
 
@@ -26,17 +32,18 @@ public class CRoomItem : MonoBehaviour {
 		this.m_RoomNameText = this.transform.Find("Container/RoomNameText").GetComponent<Text>();
 	}
 
-	public virtual void UpdateRoom(string name, string display)
+	public virtual void UpdateRoom(string name, int members, string display)
 	{
 		// ROOM NAME
 		this.m_RoomName = name;
+		this.m_RoomMembers = members;
 		this.m_RoomNameText.text = display;
 	}
 
-	public virtual void Setup(string name, string display, System.Action<string> callback)
+	public virtual void Setup(string name, int members, string display, System.Action<string> callback)
 	{
 		// UI
-		this.UpdateRoom(name, display);
+		this.UpdateRoom(name, members, display);
 		// BUTTON
 		this.m_EnterRoomButton.onClick.RemoveAllListeners();
 		this.m_EnterRoomButton.onClick.AddListener(() => {

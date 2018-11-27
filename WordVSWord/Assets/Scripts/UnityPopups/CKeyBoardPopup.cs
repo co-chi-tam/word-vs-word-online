@@ -75,21 +75,29 @@ public class CKeyBoardPopup : CDefaultPopup {
 	{
 		base.OnStartObject();
 		// INPUT
-		this.m_InputFieldText.text = string.Empty;
 		this.m_InputString = string.Empty;
+		this.m_InputFieldText.text = string.Empty;
 	}
 
 	public override void OnDestroyObject()
 	{
 		base.OnDestroyObject();
+		// INPUT
+		this.m_InputString = string.Empty;
+		this.m_InputFieldText.text = string.Empty;
+		// EVENTS
+		this.OnSubmitString = null;
 	}
 
 	#endregion
 
 	#region PUBLIC
 
-	public virtual void Setup(System.Action<string> callback)
+	public virtual void Setup(string value, System.Action<string> callback)
 	{
+		this.m_InputString = value.ToUpper();
+		this.m_InputFieldText.text = this.m_InputString;
+		// EVENTS
 		this.OnSubmitString = callback;
 	}
 
